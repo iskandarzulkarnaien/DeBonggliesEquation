@@ -96,11 +96,12 @@ class DeBoggliesEquation
 
   def import_dictionary
     # Todo: 1. Clear stored dictionary && dictionary in memory. 2. Load new dictionary into memory and save it on disk
+    print_formatted PLACEHOLDER_MESSAGE
   end
 
   def help
-    help_message = "Todo: create help message"
-    print_formatted(help_message)
+    # Todo: Create help message
+    print_formatted PLACEHOLDER_MESSAGE
   end
 
   def exit_program
