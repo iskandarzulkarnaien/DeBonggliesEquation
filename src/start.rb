@@ -102,7 +102,9 @@ class DeBoggliesEquation
 
   def exit_program
     print_formatted "Goodbye! Thanks for playing!"
-    handle_shutdown    
+    handle_shutdown
+    # Todo: Remove this sleep and shift it somewhere else
+    sleep(5)
     exit
   end
 
