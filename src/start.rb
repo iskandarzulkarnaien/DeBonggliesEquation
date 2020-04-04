@@ -220,6 +220,7 @@ class DeBoggliesEquation
   end
 
   def print_formatted(message)
+    sleep(0.1) # Instantaenous output is hard to follow and may seem too overwhelming and quick for some users
     puts "\n#{message}\n"
   end
 
