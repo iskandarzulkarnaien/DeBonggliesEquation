@@ -49,8 +49,9 @@ class DeBoggliesEquation
 
     # Todo: Load dictionary into trie, etc
     @dictionary = DictionaryTrie.new
-    puts Dir.pwd
-    File.open('./data/dictionary.txt').each { |word| @dictionary.insert(word.chomp.upcase) }
+    # puts "Debug: #{Dir.pwd}"
+    dictionary_path = File.join(File.dirname(__FILE__), "../data/dictionary.txt")
+    File.open(dictionary_path).each { |word| @dictionary.insert(word.chomp.upcase) }
   end
 
   def start
