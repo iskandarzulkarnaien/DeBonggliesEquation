@@ -6,6 +6,9 @@ require_relative 'dictionary_trie.rb'
 # Todo: Add better stats e.g. highest scoring words, how many of each word etc
 # Todo: Test whether OCRA can generate executable. If cannot, write script to smush everything into one file and run OCRA.
 
+# Todo: Remove placeholder message
+PLACEHOLDER_MESSAGE = "This feature is not yet implemented."
+
 class DeBoggliesEquation
   def initialize
     @welcome_msg = '' +
