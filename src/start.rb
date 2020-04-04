@@ -134,12 +134,12 @@ class DeBoggliesEquation
   def initialize_game(board, duration)
     print_formatted "Initializing game, this may take a moment..."
     game = Game.new(board, duration, @dictionary)
-    print_formatted "Debug: Game with board #{game.get_board_tiles} created"
+    # print_formatted "Debug: Game with board #{game.get_board_tiles} created"
     game
   end
 
   def start_playing(game)
-    print_formatted "Debug: start_playing run"
+    # print_formatted "Debug: start_playing run"
 
     formatted_board = format_2D_board(game)
     game_message = "The game has started. You have #{game.duration}s. Good luck!"

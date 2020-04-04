@@ -48,13 +48,13 @@ class Game
   def initialize(tiles_string, duration, dictionary)
     @board = tiles_string.nil? ? generate_random_board : Board.new(BOARD_SIZE, tiles_string)
     #Todo: Remove debug
-    @board = Board.new(BOARD_SIZE, DEBUG_BOARD)
+    # @board = Board.new(BOARD_SIZE, DEBUG_BOARD)
     @duration = duration
     @created_at = Time.now
     @points = 0
     @played_words = Set.new
     @valid_words = Solver.new(dictionary, @board).valid_words
-    puts "Debug: Num valid words == #{@valid_words.length}"
+    # puts "Debug: is_valid_option?: Num valid words == #{@valid_words.length}"
   end
 
   def calculate_points(word)
