@@ -205,9 +205,9 @@ class DeBoggliesEquation
   end
 
   def is_valid_board?(board)
-    # Todo: Check for invalid letters or wrong length
-    print_formatted "Debug: is_valid_board? run"
-    true
+    # print_formatted "Debug: is_valid_board? run"
+    # Todo: Remove hardcoded value
+    board.length == 16 && !board.match(/[^A-Z*]/)
   end
 
   def is_valid_option?(option)
