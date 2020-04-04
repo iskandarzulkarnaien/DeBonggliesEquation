@@ -4,6 +4,7 @@ require_relative 'dictionary_trie.rb'
 # Todo: Custom board sizes
 # Todo: Change all debug messages to logging messages
 # Todo: Add better stats e.g. highest scoring words, how many of each word etc
+# Todo: Test whether OCRA can generate executable. If cannot, write script to smush everything into one file and run OCRA.
 
 class DeBoggliesEquation
   def initialize
@@ -54,9 +55,12 @@ class DeBoggliesEquation
       print_formatted @welcome_msg
       while true
         choice = request_input @options_msg.join("\n")
-        print_formatted "Invalid option selected!" unless @options.keys.include?(choice)
 
-        @options[choice].()
+        if is_valid_option?(choice)
+          @options[choice].()
+        else
+          print_formatted "Invalid option selected!" unless @options.keys.include?(choice)
+        end
       end
     rescue StandardError => e
       handle_error(e)
@@ -105,7 +109,7 @@ class DeBoggliesEquation
   def get_duration
     while true
       duration = request_input "Please enter the game's duration, in seconds"
-      break if is_valid_duration(duration)
+      break if is_valid_duration?(duration)
       print_formatted "Your duration is invalid!"
     end
     duration.to_i
@@ -114,7 +118,7 @@ class DeBoggliesEquation
   def get_user_board
     while true
       user_board = request_input "Please enter a 16 Letter Board. Valid characters are A-Z and *, which can be any character"
-      break if is_valid_board(user_board)
+      break if is_valid_board?(user_board)
       print_formatted "Your board contains invalid characters!"
     end
     user_board
@@ -145,8 +149,11 @@ class DeBoggliesEquation
       end
 
       #Todo: Refactor by extract method
-      if game.is_valid_word?(word)
+      if game.is_played_word?(word)
+        print_formatted "Oops! Looks like you have already played #{word}"
+      elsif game.is_valid_word?(word)
         points = game.calculate_points(word)
+        game.play_word(word)
         game.increment_points(points)
         print_formatted "Congrats! #{word} was worth #{points} points"
       else
@@ -190,15 +197,19 @@ class DeBoggliesEquation
     # Todo: Prompt whether want to play again
   end
 
-  def is_valid_duration(duration)
+  def is_valid_duration?(duration)
     # Todo: This looks hacky, find a better way to check if integer
     Integer(duration) rescue false
   end
 
-  def is_valid_board(board)
+  def is_valid_board?(board)
     # Todo: Check for invalid letters or wrong length
-    print_formatted "Debug: is_valid_board run"
+    print_formatted "Debug: is_valid_board? run"
     true
+  end
+
+  def is_valid_option?(option)
+    @options.keys.include?(option)
   end
 
   def print_formatted(message)

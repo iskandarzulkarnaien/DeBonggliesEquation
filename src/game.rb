@@ -4,7 +4,7 @@ require_relative 'solver.rb'
 require 'Set'
 
 class Game
-  attr_accessor :duration, :points, :played_words
+  attr_accessor :duration, :points
 
   # Standard Boggle Dice Configuration Obtained From:
   # https://boardgames.stackexchange.com/questions/29264/boggle-what-is-the-dice-configuration-for-boggle-in-various-languages
@@ -65,8 +65,16 @@ class Game
     @points += points
   end
 
+  def play_word(word)
+    @played_words << word
+  end
+
   def is_valid_word?(word)
     @valid_words.include?(word)
+  end
+
+  def is_played_word?(word)
+    @played_words.include?(word)
   end
 
   def is_game_over?
