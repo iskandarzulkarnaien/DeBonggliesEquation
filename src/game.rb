@@ -4,6 +4,8 @@ require_relative 'solver.rb'
 require 'Set'
 
 class Game
+  attr_accessor :duration, :points, :played_words
+
   # Standard Boggle Dice Configuration Obtained From:
   # https://boardgames.stackexchange.com/questions/29264/boggle-what-is-the-dice-configuration-for-boggle-in-various-languages
   # Qu replaced with Q, and added * to each dice
@@ -23,7 +25,7 @@ class Game
   DICE_THIRTEEN = ['R', 'A', 'L', 'E', 'S', 'C', '*']
   DICE_FOURTEEN = ['U', 'W', 'I', 'L', 'R', 'G', '*']
   DICE_FIFTEEN =  ['P', 'A', 'C', 'E', 'M', 'D', '*']
-  
+
   ALL_DICE = [
     DICE_ZERO, DICE_ONE, DICE_TWO, DICE_THREE,
     DICE_FOUR, DICE_FIVE, DICE_SIX, DICE_SEVEN,
@@ -59,15 +61,32 @@ class Game
     POINTS_MAPPING["#{word.length}"] if @valid_words.include?(word)
   end
 
-  def is_game_over
-    Time.now > @created_at + @duration
+  def increment_points(points)
+    @points += points
+  end
+
+  def is_valid_word?(word)
+    @valid_words.include?(word)
+  end
+
+  def is_game_over?
+    Time.now > (@created_at + @duration)
+  end
+
+  def get_time_remaining
+    (@created_at + @duration - Time.now).to_i
   end
 
   def get_board_tiles
-    return @board.to_s
+    @board.to_s
+  end
+
+  def get_board_size
+    @board.size
   end
 
   private
+
   def generate_random_board
     tiles = []
 

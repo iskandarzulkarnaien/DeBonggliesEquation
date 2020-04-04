@@ -13,7 +13,7 @@ class Solver
     @valid_words = Set.new
     solve_boggle
   end
-  
+
   private
 
   def solve_boggle
@@ -21,7 +21,7 @@ class Solver
   end
 
   def search_trie(word_fragment, tile, used_tiles = Set.new)
-    return if is_pointless_search(word_fragment) 
+    return if is_pointless_search?(word_fragment) 
 
     add_if_valid_word(word_fragment)
 
@@ -41,16 +41,16 @@ class Solver
     end
   end
 
-  def is_pointless_search(word_fragment)
+  def is_pointless_search?(word_fragment)
     # Early return if non-empty word_fragment is not found in the trie
-    !@dictionary_trie.is_in_trie(word_fragment) && !word_fragment.empty?
+    !@dictionary_trie.is_in_trie?(word_fragment) && !word_fragment.empty?
   end
 
   def add_if_valid_word(word_fragment)
-    @valid_words << word_fragment if is_valid(word_fragment)
+    @valid_words << word_fragment if is_valid?(word_fragment)
   end
 
-  def is_valid(word_fragment)
-    word_fragment.size >= MIN_WORD_SIZE && @dictionary_trie.is_valid_word(word_fragment)
+  def is_valid?(word_fragment)
+    word_fragment.size >= MIN_WORD_SIZE && @dictionary_trie.is_valid_word?(word_fragment)
   end
 end

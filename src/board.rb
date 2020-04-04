@@ -1,7 +1,7 @@
 require_relative 'tile.rb'
 
 class Board
-  attr_accessor :tiles
+  attr_accessor :tiles, :size
 
   def initialize(size, tile_string)
     @size = size
