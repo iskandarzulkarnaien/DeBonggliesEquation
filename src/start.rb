@@ -6,6 +6,10 @@ require_relative 'dictionary_trie.rb'
 # Todo: Add better stats e.g. highest scoring words, how many of each word etc
 # Todo: Test whether OCRA can generate executable. If cannot, write script to smush everything into one file and run OCRA.
 
+# Todo: Word Based Easter Eggs
+  # Todo: Display easter egg message if "DEBONGE" or "DEBONGEH" was played
+  # Todo: "Congrats! HOTEL was worth TRIVAGO"
+
 # Todo: Remove placeholder message
 PLACEHOLDER_MESSAGE = "This feature is not yet implemented."
 
@@ -110,7 +114,7 @@ class DeBoggliesEquation
     print_formatted "Goodbye! Thanks for playing!"
     handle_shutdown
     # Todo: Remove this sleep and shift it somewhere else
-    sleep(5)
+    sleep(3)
     exit
   end
 
@@ -156,7 +160,7 @@ class DeBoggliesEquation
         break
       end
 
-      #Todo: Refactor by extract method
+      # Todo: Refactor by extract method
       if game.is_played_word?(word)
         print_formatted "Oops! Looks like you have already played #{word}"
       elsif game.is_valid_word?(word)
