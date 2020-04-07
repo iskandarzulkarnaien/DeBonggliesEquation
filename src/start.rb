@@ -11,62 +11,85 @@ require_relative 'dictionary_trie.rb'
   # Todo: "Congrats! HOTEL was worth TRIVAGO"
 
 # Todo: Remove placeholder message
-PLACEHOLDER_MESSAGE = "This feature is not yet implemented."
 
 class DeBoggliesEquation
-  def initialize
-    @welcome_msg = '' +
-    '      _____       ____                          _ _             ______                  _   _                  ' + "\n" +
-    '     |  __ \     |  _ \                        | (_)           |  ____|                | | (_)                 ' + "\n" +
-    '     | |  | | ___| |_) | ___  _ __   __ _  __ _| |_  ___  ___  | |__   __ _ _   _  __ _| |_ _  ___  _ __       ' + "\n" +
-    '     | |  | |/ _ \  _ < / _ \| \'_ \ / _` |/ _` | | |/ _ \/ __| |  __| / _` | | | |/ _` | __| |/ _ \| \'_ \      ' + "\n" +
-    '     | |__| |  __/ |_) | (_) | | | | (_| | (_| | | |  __/\__ \ | |___| (_| | |_| | (_| | |_| | (_) | | | |     ' + "\n" +
-    '     |_____/ \___|____/ \___/|_| |_|\__, |\__, |_|_|\___||___/ |______\__, |\__,_|\__,_|\__|_|\___/|_| |_|     ' + "\n" +
-    '                                     __/ | __/ |                         | |                                   ' + "\n" +
-    '                                    |___/ |___/                          |_|                                   '
+  PLACEHOLDER_MESSAGE = "This feature is not yet implemented."
 
-    @options_msg = [
-      "Please select an option:",
-      "1. Start with a random board",
-      "2. Start with custom board",
-      "3. View Highscore",
-      "4. Reset Highscore",
-      "5. Import new dictionary",
-      "6. View help",
-      "7. Exit",
-      "Enter Option:"
+  WELCOME_MESSAGE = '' +
+  '      _____       ____                          _ _             ______                  _   _                  ' + "\n" +
+  '     |  __ \     |  _ \                        | (_)           |  ____|                | | (_)                 ' + "\n" +
+  '     | |  | | ___| |_) | ___  _ __   __ _  __ _| |_  ___  ___  | |__   __ _ _   _  __ _| |_ _  ___  _ __       ' + "\n" +
+  '     | |  | |/ _ \  _ < / _ \| \'_ \ / _` |/ _` | | |/ _ \/ __| |  __| / _` | | | |/ _` | __| |/ _ \| \'_ \      ' + "\n" +
+  '     | |__| |  __/ |_) | (_) | | | | (_| | (_| | | |  __/\__ \ | |___| (_| | |_| | (_| | |_| | (_) | | | |     ' + "\n" +
+  '     |_____/ \___|____/ \___/|_| |_|\__, |\__, |_|_|\___||___/ |______\__, |\__,_|\__,_|\__|_|\___/|_| |_|     ' + "\n" +
+  '                                     __/ | __/ |                         | |                                   ' + "\n" +
+  '                                    |___/ |___/                          |_|                                   '
+
+  # Todo: Find a better way to do this
+  # Stored in array for easy enumeration (i.e. when adding/removing commands, mappings do not need to be manually changed)
+
+  def initialize
+    # Constant is declared here as it requires access to instance methods
+    # Todo: Find a better way to to this
+    options_array = [
+      {
+        :message => "Start with a random board",
+        :action => -> { random_start }
+      },
+      {
+        :message => "Start with custom board",
+        :action => -> { custom_start }
+      },
+      {
+        :message => "View Highscore",
+        :action => -> { view_highscore }
+      },
+      {
+        :message => "Reset Highscore",
+        :action => -> { reset_highscore }
+      },
+      {
+        :message => "Import new dictionary",
+        :action => -> { import_dictionary }
+      },
+      {
+        :message => "View help",
+        :action => -> { help }
+      },
+      {
+        :message => "Exit",
+        :action => -> { exit_program }
+      }
     ]
-  
-    @options = {
-      "1" => -> { random_start },
-      "2" => -> { custom_start },
-      "3" => -> { view_highscore },
-      "4" => -> { reset_highscore },
-      "5" => -> { import_dictionary },
-      "6" => -> { help },
-      "7" => -> { exit_program }
-    }
+
+    # Todo: Find a better way to do this
+    @options = Hash.new
+    (1..options_array.size).each {|option_num| @options[option_num.to_s] = options_array[option_num - 1] }
+
+    # Todo: Find a better way to do this
+    @options_msg = ["Please select an option:"]
+    (1..options_array.size).each { |option_num| @options_msg << "#{option_num}. #{@options[option_num.to_s][:message]}" }
+    @options_msg << "Enter Option:"
 
     # Todo: Store the below in json file
-
-    # Todo: Store highscore (perhaps can just load at start? as class level member)
     @highscore = 0
 
     # Todo: Load dictionary into trie, etc
     @dictionary = DictionaryTrie.new
     # puts "Debug: #{Dir.pwd}"
-    dictionary_path = File.join(File.dirname(__FILE__), "../data/dictionary.txt")
+    dictionary_path = File.join(File.dirname(__FILE__), "../data/default_dictionary.txt")
     File.open(dictionary_path).each { |word| @dictionary.insert(word.chomp.upcase) }
   end
 
   def start
     begin
-      print_formatted @welcome_msg
+      print_formatted WELCOME_MESSAGE
       while true
         choice = request_input @options_msg.join("\n")
 
         if is_valid_option?(choice)
-          @options[choice].()
+          puts @options.keys
+          @options[choice][:action].()
         else
           print_formatted "Invalid option selected!" unless @options.keys.include?(choice)
         end
@@ -220,12 +243,13 @@ class DeBoggliesEquation
     board.length == 16 && !board.match(/[^A-Z*]/)
   end
 
+  # Todo: Find a better way to do this
   def is_valid_option?(option)
-    @options.keys.include?(option)
+    ("1"..@options.size.to_s).include?(option)
   end
 
   def print_formatted(message)
-    sleep(0.1) # Instantaenous output is hard to follow and may seem too overwhelming and quick for some users
+    sleep(0.1) # Instantaenous output is hard to follow and may seem too overwhelming for some users
     puts "\n#{message}\n"
   end
 
