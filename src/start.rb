@@ -1,5 +1,7 @@
-require_relative 'game.rb'
 require_relative 'dictionary_trie.rb'
+require_relative 'game.rb'
+
+require 'tk'
 
 # Todo: Custom board sizes
 # Todo: Change all debug messages to logging messages
@@ -14,6 +16,8 @@ require_relative 'dictionary_trie.rb'
 
 class DeBoggliesEquation
   PLACEHOLDER_MESSAGE = "This feature is not yet implemented."
+
+  DICTIONARY_PATH = File.join(File.dirname(__FILE__), "../data/default_dictionary.txt")
 
   WELCOME_MESSAGE = '' +
   '      _____       ____                          _ _             ______                  _   _                  ' + "\n" +
@@ -53,6 +57,10 @@ class DeBoggliesEquation
         :action => -> { import_dictionary }
       },
       {
+        :message => "Reset to default dictionary",
+        :action => -> { reset_dictionary }
+      },
+      {
         :message => "View help",
         :action => -> { help }
       },
@@ -73,12 +81,7 @@ class DeBoggliesEquation
 
     # Todo: Store the below in json file
     @highscore = 0
-
-    # Todo: Load dictionary into trie, etc
-    @dictionary = DictionaryTrie.new
-    # puts "Debug: #{Dir.pwd}"
-    dictionary_path = File.join(File.dirname(__FILE__), "../data/default_dictionary.txt")
-    File.open(dictionary_path).each { |word| @dictionary.insert(word.chomp.upcase) }
+    @dictionary = make_dictionary(DICTIONARY_PATH)
   end
 
   def start
@@ -88,7 +91,6 @@ class DeBoggliesEquation
         choice = request_input @options_msg.join("\n")
 
         if is_valid_option?(choice)
-          puts @options.keys
           @options[choice][:action].()
         else
           print_formatted "Invalid option selected!" unless @options.keys.include?(choice)
@@ -124,8 +126,22 @@ class DeBoggliesEquation
   end
 
   def import_dictionary
-    # Todo: 1. Clear stored dictionary && dictionary in memory. 2. Load new dictionary into memory and save it on disk
-    print_formatted PLACEHOLDER_MESSAGE
+    begin
+      user_dictionary_path = Tk.getOpenFile('title' => "Select new dictionary", 'filetypes' => "{{Text} {.txt}}")
+      if user_dictionary_path.empty?
+        print_formatted "Dictionary import cancelled"
+      else
+        @dictionary = make_dictionary(user_dictionary_path)
+        print_formatted "New dictionary successfully loaded"
+      end
+    rescue StandardError => e
+      raise StandardError.new("Dictionary Import Failed! Please send a screenshot of this error to the developer\n" + e.message)
+    end
+  end
+
+  def reset_dictionary
+    @dictionary = make_dictionary(DICTIONARY_PATH)
+    print_formatted "Default dictionary successfully loaded"
   end
 
   def help
@@ -214,7 +230,7 @@ class DeBoggliesEquation
   end
 
   def handle_error(e)
-    #Todo: Handle error
+    #Todo: Handle error. Should keep the window open until user presses any input, so the error can be seen instead of window immediately close.
     raise e
   end
 
@@ -257,6 +273,12 @@ class DeBoggliesEquation
     print_formatted message
     print '>>> '
     gets.chomp.strip.upcase
+  end
+
+  def make_dictionary(dictionary_path)
+    dictionary = DictionaryTrie.new
+    File.open(dictionary_path).each { |word| dictionary.insert(word.chomp.upcase) }
+    dictionary
   end
 end
 
