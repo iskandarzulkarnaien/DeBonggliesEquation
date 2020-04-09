@@ -1,12 +1,12 @@
 require_relative 'dictionary_trie.rb'
 require_relative 'game.rb'
 
+require 'json'
 require 'tk'
 
 # Todo: Custom board sizes
 # Todo: Change all debug messages to logging messages
 # Todo: Add better stats e.g. highest scoring words, how many of each word etc
-# Todo: Test whether OCRA can generate executable. If cannot, write script to smush everything into one file and run OCRA.
 
 # Todo: Word Based Easter Eggs
   # Todo: Display easter egg message if "DEBONGE" or "DEBONGEH" was played
@@ -18,6 +18,7 @@ class DeBoggliesEquation
   PLACEHOLDER_MESSAGE = "This feature is not yet implemented."
 
   DICTIONARY_PATH = File.join(File.dirname(__FILE__), "../data/default_dictionary.txt")
+  SAVE_PATH = File.join(File.dirname(__FILE__), "../data/saved_data.json")
 
   WELCOME_MESSAGE = '' +
   '      _____       ____                          _ _             ______                  _   _                  ' + "\n" +
@@ -80,8 +81,9 @@ class DeBoggliesEquation
     @options_msg << "Enter Option:"
 
     # Todo: Store the below in json file
-    @highscore = 0
-    @dictionary = make_dictionary(DICTIONARY_PATH)
+    load_data_from_disk
+    @highscore ||= 0
+    # @dictionary ||= make_dictionary(DICTIONARY_PATH)
   end
 
   def start
@@ -235,7 +237,7 @@ class DeBoggliesEquation
   end
 
   def handle_shutdown
-    #Todo: Handle shutdown
+    save_data_to_disk
   end
 
   def handle_game_over(game)
@@ -277,8 +279,46 @@ class DeBoggliesEquation
 
   def make_dictionary(dictionary_path)
     dictionary = DictionaryTrie.new
-    File.open(dictionary_path).each { |word| dictionary.insert(word.chomp.upcase) }
+    debug_arr = []
+    # File.open(dictionary_path).each { |word| dictionary.insert(word.chomp.upcase) }
+    File.open(dictionary_path).each do |word|
+      dictionary.insert(word.chomp.upcase)
+      debug_arr << word.chomp.upcase
+    end
+    puts debug_arr.length
     dictionary
+  end
+
+  # Need to find a way to efficiently jsonify tries
+  def load_data_from_disk
+    # if empty, skip. else load.
+    # deal with save file corruption here
+    # File.open(SAVE_PATH) do  |f|
+    #   data = JSON.load f
+    #   next if data.nil?
+    #   puts "RUNNING DICTIONARY"
+    #   @highscore = data["highscore"]
+    #   @dictionary = DictionaryTrie.new.from_json!(data["dictionary"])
+    #   puts "DICTIONARY IS EMPTY" if @dictionary.nil?
+    # end
+    File.open(SAVE_PATH) do  |f|
+      data = JSON.load f
+      next if data.nil?
+      puts "RUNNING DICTIONARY"
+      # @highscore = data["highscore"]
+      @dictionary = DictionaryTrie.new.from_json!(data) #NOTE: CONSIDER NOT SAVING TRIE AS JSON AS IT IS POSSIBLY LARGER THAN A TEXT FILE
+      puts "DICTIONARY IS EMPTY" if @dictionary.nil?
+    end
+  end
+
+  def save_data_to_disk
+    # data_hash = { :highscore => @highscore, :dictionary => @dictionary.to_json }
+    # File.open(SAVE_PATH, 'w') do |f|
+    #   f.write(JSON.pretty_generate(data_hash))
+    # end
+    File.open(SAVE_PATH, 'w') do |f|
+      f.write(@dictionary.to_json)
+    end
   end
 end
 
