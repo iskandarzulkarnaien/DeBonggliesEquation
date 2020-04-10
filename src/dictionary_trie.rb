@@ -2,8 +2,10 @@
 
 class DictionaryTrie
   def initialize
-    @sub_tries = {}           # A Trie is a hash of hashes.
-    @is_complete_word = false # Indicate whether the trie's key, with its parent tries' keys, would form a valid word
+    # A Trie is a hash of hashes.
+    @sub_tries = {}
+    # Indicate whether the trie's key, with its parent tries' keys, would form a valid word
+    @is_complete_word = false
   end
 
   def insert(word)
@@ -19,30 +21,32 @@ class DictionaryTrie
   end
 
   # Traverse trie to determine whether word_fragment is present (i.e. part of a sub-trie)
-  def is_in_trie?(word_fragment)
+  def in_trie?(word_fragment)
     # Cleaner implementation, but less readable
-    # word_fragment.empty? || (@sub_tries.key?(word_fragment[0]) && @sub_tries[word_fragment[0]].is_in_trie?(word_fragment[1..-1]))
+    # word_fragment.empty? || (@sub_tries.key?(word_fragment[0]) &&
+    # @sub_tries[word_fragment[0]].in_trie?(word_fragment[1..-1]))
 
-    # Todo: Find a way to refactor this such that it looks cleaner while remaining readable
+    # TODO: Find a way to refactor this such that it looks cleaner while remaining readable
     if word_fragment.empty?
       true
     elsif @sub_tries.key?(word_fragment[0])
-      @sub_tries[word_fragment[0]].is_in_trie?(word_fragment[1..-1])
+      @sub_tries[word_fragment[0]].in_trie?(word_fragment[1..-1])
     else
       false
     end
   end
 
   # Traverse trie to determine whether word_fragment is a valid word
-  def is_valid_word?(word)
+  def valid_word?(word)
     # Cleaner implementation, but less readable
-    # (word.empty? && @is_complete_word) || (@sub_tries.key?(word[0]) && @sub_tries[word[0]].is_valid_word?(word[1..-1]))
+    # (word.empty? && @is_complete_word) || (@sub_tries.key?(word[0]) &&
+    # @sub_tries[word[0]].valid_word?(word[1..-1]))
 
-    # Todo: Find a way to refactor this such that it looks cleaner while remaining readable
+    # TODO: Find a way to refactor this such that it looks cleaner while remaining readable
     if word.empty?
       @is_complete_word
     elsif @sub_tries.key?(word[0])
-      @sub_tries[word[0]].is_valid_word?(word[1..-1])
+      @sub_tries[word[0]].valid_word?(word[1..-1])
     else
       false
     end

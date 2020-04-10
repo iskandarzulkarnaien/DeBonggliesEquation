@@ -10,31 +10,33 @@ class Board
     @tiles = create_tiles(size, tile_string)
   end
 
-  # Todo: Refactor if possible
+  # TODO: Refactor if possible
+  # Linting disabled as this section has been marked for refactor
+  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
   def adjacent_tiles(row, col)
     adj_tiles = []
 
-    if row > 0
+    if row.positive?
       adj_tiles << tile_at(row - 1, col)
-      adj_tiles << tile_at(row - 1, col - 1) unless col == 0
+      adj_tiles << tile_at(row - 1, col - 1) unless col.zero?
       adj_tiles << tile_at(row - 1, col + 1) unless col == @size - 1
     end
 
-    adj_tiles << tile_at(row, col - 1) unless col == 0
+    adj_tiles << tile_at(row, col - 1) unless col.zero?
     adj_tiles << tile_at(row, col + 1) unless col == @size - 1
 
     if row < @size - 1
-      adj_tiles<< tile_at(row + 1, col - 1) unless col == 0
+      adj_tiles << tile_at(row + 1, col - 1) unless col.zero?
       adj_tiles << tile_at(row + 1, col)
       adj_tiles << tile_at(row + 1, col + 1) unless col == @size - 1
     end
 
     adj_tiles
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 
   def to_s
-    (tiles.map { |tile| tile.letter }).reduce('') { |string, letter| string + letter }
-    
+    tiles.map(&:letter).reduce('') { |string, letter| string + letter }
   end
 
   private
