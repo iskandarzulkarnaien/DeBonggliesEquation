@@ -1,5 +1,11 @@
 require_relative 'dictionary_trie.rb'
-require_relative 'game.rb'
+require_relative 'game/game.rb'
+require_relative 'game/game_factory.rb'
+require_relative 'game/classic_game.rb'
+require_relative 'game/short_game.rb'
+require_relative 'game/long_game.rb'
+require_relative 'game/custom_game.rb'
+require_relative 'game/sandbox_game.rb'
 
 require 'tk'
 
@@ -80,7 +86,7 @@ class DeBoggliesEquation
     @options_msg << "Enter Option:"
 
     # Todo: Store the below in json file
-    @highscore = 0
+    @highscore = Game::GAME_TYPES.product([0]).to_h
     @dictionary = make_dictionary(DICTIONARY_PATH)
   end
 
@@ -102,17 +108,19 @@ class DeBoggliesEquation
   end
 
   def random_start
-    duration = get_duration
+    game_type = get_game_type
+    duration = get_duration if game_type == :custom
 
-    game = initialize_game(nil, duration)
+    game = initialize_game(nil, game_type, duration)
     start_playing(game)
   end
 
   def custom_start
     user_board = get_user_board
-    duration = get_duration
+    game_type = get_game_type
+    duration = get_duration if game_type == :custom
 
-    game = initialize_game(user_board, duration)
+    game = initialize_game(user_board, game_type, duration)
     start_playing(game)
   end
 
@@ -157,31 +165,34 @@ class DeBoggliesEquation
     exit
   end
 
-  def get_duration
-    game_durations = { 
-      "1" => { :type => "Short", :message => "Short Game, 2 Minutes", :duration => 120 },
-      "2" => { :type => "Classic", :message => "Classic Game, 3 Minutes", :duration => 180 },
-      "3" => { :type => "Long", :message => "Long Game, 5 Minutes", :duration => 240 },
-      "4" => { :type => "Custom", :message => "Custom Game Length (Not eligible for highscore!)"}
+  def get_game_type
+    # Todo: Refactor, do not hardcode message, have them based on actual durations of each game type
+    game_types = {
+      "1" => { :type => Game::GAME_TYPES[0], :message => "Short Game, 2 Minutes" },
+      "2" => { :type => Game::GAME_TYPES[1], :message => "Classic Game, 3 Minutes" },
+      "3" => { :type => Game::GAME_TYPES[2], :message => "Long Game, 5 Minutes" },
+      "4" => { :type => Game::GAME_TYPES[3], :message => "Custom Game Length (Not eligible for highscore!)"},
+      "5" => { :type => Game::GAME_TYPES[4], :message => "Sandbox Game, Infinite Duration (Take as long as you like!)"}
     }
 
-    durations_msg = "Please select a duration option:\n"
-    game_durations.keys.each {|type| durations_msg << "#{type}. #{game_durations[type][:message]}\n" }
+    game_type_msg = "Please select a duration option:\n"
+    game_types.keys.each {|type| game_type_msg << "#{type}. #{game_types[type][:message]}\n" }
     while true
-      choice = request_input durations_msg
-      break if game_durations.keys.include?(choice)
+      choice = request_input game_type_msg
+      break if game_types.keys.include?(choice)
       print_formatted "Invalid duration option selected!"
     end
 
-    if game_durations[choice.to_s][:type] == "Custom"
-      while true
-        duration = request_input "Please enter the game's duration, in seconds"
-        break if is_valid_duration?(duration)
-        print_formatted "Your duration is invalid!"
-      end
-    else
-      duration = game_durations[choice.to_s][:duration]
+    game_types[choice][:type]
+  end
+
+  def get_duration
+    while true
+      duration = request_input "Please enter the game's duration, in seconds"
+      break if is_valid_duration?(duration)
+      print_formatted "Your duration is invalid!"
     end
+
     duration.to_i
   end
 
@@ -194,9 +205,13 @@ class DeBoggliesEquation
     user_board
   end
 
-  def initialize_game(board, duration)
+  def initialize_game(board, type, duration)
     print_formatted "Initializing game, this may take a moment..."
-    game = Game.new(board, duration, @dictionary)
+    if duration.nil?
+      game = GameFactory.create_preset_game(board, @dictionary, type)
+    else
+      game = GameFactory.create_custom_game(board, @dictionary, duration)
+    end
     # print_formatted "Debug: Game with board #{game.get_board_tiles} created"
     game
   end

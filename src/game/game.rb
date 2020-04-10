@@ -1,10 +1,10 @@
-require_relative 'board.rb'
-require_relative 'solver.rb'
+require_relative '../board.rb'
+require_relative '../solver.rb'
 
 require 'Set'
 
 class Game
-  attr_accessor :duration, :points
+  attr_accessor :duration, :points, :type
 
   # Standard Boggle Dice Configuration Obtained From:
   # https://boardgames.stackexchange.com/questions/29264/boggle-what-is-the-dice-configuration-for-boggle-in-various-languages
@@ -45,15 +45,21 @@ class Game
   # Todo: Remove debug (or better yet, shift to tests :P)
   DEBUG_BOARD = "TAP*EAKSOBRSS*XD" # Gives words: 585
 
-  def initialize(tiles_string, duration, dictionary)
+  GAME_TYPES = [:short, :classic, :long, :custom, :sandbox]
+
+  # Not supposed to be instantiated, only for subclasses to use
+  def initialize(tiles_string, dictionary)
     @board = tiles_string.nil? ? generate_random_board : Board.new(BOARD_SIZE, tiles_string)
     #Todo: Remove debug
     # @board = Board.new(BOARD_SIZE, DEBUG_BOARD)
-    @duration = duration
     @created_at = Time.now
     @points = 0
     @played_words = Set.new
     @valid_words = Solver.new(dictionary, @board).valid_words
+    
+    # Values assigned in subclasses
+    @duration = nil 
+    @type = nil
     # puts "Debug: is_valid_option?: Num valid words == #{@valid_words.length}"
   end
 
