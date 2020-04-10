@@ -174,6 +174,7 @@ class DeBoggliesEquation
         @dictionary = make_dictionary(user_dictionary_path)
         print_formatted 'New dictionary successfully loaded'
       end
+      pause_until_next_user_input
     rescue StandardError => e
       raise 'Dictionary Import Failed! Please send a screenshot of this error '\
             "to the developer\n#{e.message}"
@@ -184,11 +185,13 @@ class DeBoggliesEquation
   def reset_dictionary
     @dictionary = make_dictionary(DICTIONARY_PATH)
     print_formatted 'Default dictionary successfully loaded'
+    pause_until_next_user_input
   end
 
   def help
     # TODO: Create help message
     print_formatted PLACEHOLDER_MESSAGE
+    pause_until_next_user_input
   end
 
   def exit_program
@@ -325,6 +328,7 @@ class DeBoggliesEquation
       print_formatted "Congratulations! A new highscore of #{game.points} compared to #{@highscore[game.type]}"
       @highscore = game.points
     end
+    pause_until_next_user_input
     # TODO: Prompt whether want to play again
   end
 
