@@ -6,7 +6,7 @@ require_relative '../solver.rb'
 require 'Set'
 
 class Game
-  attr_accessor :duration, :points, :type
+  attr_accessor :duration, :max_points, :points, :type
 
   # Standard Boggle Dice Configuration Obtained From:
   # https://boardgames.stackexchange.com/questions/29264/boggle-what-is-the-dice-configuration-for-boggle-in-various-languages
@@ -57,6 +57,7 @@ class Game
     @points = 0
     @played_words = Set.new
     @valid_words = Solver.new(dictionary, @board).valid_words
+    @max_points = calculate_max_points
 
     # Values assigned in subclasses
     @duration = nil
@@ -112,6 +113,12 @@ class Game
   end
 
   private
+
+  def calculate_max_points
+    max_points = 0
+    @valid_words.each { |word| max_points += calculate_points(word) }
+    max_points
+  end
 
   def generate_random_board
     tiles = []

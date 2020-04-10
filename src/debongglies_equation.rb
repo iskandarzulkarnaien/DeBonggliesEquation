@@ -349,9 +349,10 @@ class DeBoggliesEquation
   end
 
   def handle_game_over(game)
-    print_formatted "The game is now over! You scored #{game.points} points in #{game.duration}s"
+    print_formatted "The game is now over! You scored #{game.points} points in "\
+                    "#{game.duration}s.\nThe maximum score was: #{game.max_points} points"
 
-    if !game.custom_game? && game.points > @highscore[game.type]
+    if eligible_for_new_highscore(game)
       print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
                       "#{@highscore[game.type]}"
       @highscore = game.points
@@ -399,6 +400,10 @@ class DeBoggliesEquation
   def pause_until_next_user_input(message = 'Press enter to continue...')
     print_formatted message
     gets
+  end
+
+  def eligible_for_new_highscore(game)
+    !game.custom_game? && game.points > @highscore[game.type]
   end
 end
 # rubocop:enable Metrics/ClassLength
