@@ -396,7 +396,7 @@ class DeBoggliesEquation
     dictionary
   end
 
-  def pause_until_next_user_input(message='Press enter to continue...')
+  def pause_until_next_user_input(message = 'Press enter to continue...')
     print_formatted message
     gets
   end
