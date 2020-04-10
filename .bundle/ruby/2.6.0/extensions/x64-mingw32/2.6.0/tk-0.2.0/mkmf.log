@@ -1,0 +1,237 @@
+have_func: checking for rb_obj_instance_exec() in ruby.h... -------------------- yes
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: int main(int argc, char **argv)
+6: {
+7:   return 0;
+8: }
+/* end */
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_obj_instance_exec; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_obj_untrust() in ruby.h... -------------------- yes
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_obj_untrust; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_obj_taint() in ruby.h... -------------------- yes
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_obj_taint; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_sym2str() in ruby.h... -------------------- yes
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_sym2str; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_id2str() in ruby.h... -------------------- yes
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_id2str; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_ary_cat() in ruby.h... -------------------- yes
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_ary_cat; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for strndup() in string.h... -------------------- no
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+conftest.c: In function 't':
+conftest.c:18:57: error: 'strndup' undeclared (first use in this function); did you mean 'strdup'?
+   18 | int t(void) { void ((*volatile p)()); p = (void ((*)()))strndup; return !p; }
+      |                                                         ^~~~~~~
+      |                                                         strdup
+conftest.c:18:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <string.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))strndup; return !p; }
+/* end */
+
+"x86_64-w64-mingw32-gcc -o conftest.exe -IC:/Ruby26-x64/include/ruby-2.6.0/x64-mingw32 -IC:/Ruby26-x64/include/ruby-2.6.0/ruby/backward -IC:/Ruby26-x64/include/ruby-2.6.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math conftest.c  -L. -LC:/Ruby26-x64/lib -L. -pipe -s     -lx64-msvcrt-ruby260  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  "
+conftest.c:18:13: warning: conflicting types for built-in function 'strndup'; expected 'char *(const char *, long long unsigned int)' [-Wbuiltin-declaration-mismatch]
+   18 | extern void strndup();
+      |             ^~~~~~~
+C:/Ruby26-x64/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/9.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\user\AppData\Local\Temp\cccv46QO.o:conftest.c:(.text+0x5): undefined reference to `strndup'
+collect2.exe: error: ld returned 1 exit status
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <string.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return 0;
+17: }
+18: extern void strndup();
+19: int t(void) { strndup(); return 0; }
+/* end */
+
+--------------------
+

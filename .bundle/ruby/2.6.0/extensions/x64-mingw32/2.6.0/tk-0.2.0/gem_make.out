@@ -1,0 +1,23 @@
+current directory: C:/Users/user/Desktop/Code/DeBonggliesEquation/.bundle/ruby/2.6.0/gems/tk-0.2.0/ext/tk/tkutil
+C:/Ruby26-x64/bin/ruby.exe -I C:/Ruby26-x64/lib/ruby/2.6.0 -r ./siteconf20200410-2356-158lupi.rb extconf.rb
+checking for rb_obj_instance_exec() in ruby.h... yes
+checking for rb_obj_untrust() in ruby.h... yes
+checking for rb_obj_taint() in ruby.h... yes
+checking for rb_sym2str() in ruby.h... yes
+checking for rb_id2str() in ruby.h... yes
+checking for rb_ary_cat() in ruby.h... yes
+checking for strndup() in string.h... no
+creating Makefile
+
+current directory: C:/Users/user/Desktop/Code/DeBonggliesEquation/.bundle/ruby/2.6.0/gems/tk-0.2.0/ext/tk/tkutil
+make "DESTDIR=" clean
+
+current directory: C:/Users/user/Desktop/Code/DeBonggliesEquation/.bundle/ruby/2.6.0/gems/tk-0.2.0/ext/tk/tkutil
+make "DESTDIR="
+generating tkutil-x64-mingw32.def
+compiling tkutil.c
+linking shared-object tkutil.so
+
+current directory: C:/Users/user/Desktop/Code/DeBonggliesEquation/.bundle/ruby/2.6.0/gems/tk-0.2.0/ext/tk/tkutil
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 tkutil.so ./.gem.20200410-2356-1qf6suh
