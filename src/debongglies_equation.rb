@@ -288,6 +288,8 @@ class DeBoggliesEquation
   # rubocop:disable Netrics/AbcSize, Metrics/MethodLength
   def start_playing(game)
     # print_formatted 'Debug: start_playing run'
+    pause_until_next_user_input('Game generated. Press enter to begin')
+    game.start
 
     formatted_board = format_displayed_board(game)
     # TODO: Display as "You have x mins and y seconds" or "You have y seconds" if x+y < 1min
@@ -394,8 +396,8 @@ class DeBoggliesEquation
     dictionary
   end
 
-  def pause_until_next_user_input
-    print_formatted 'Press enter to continue...'
+  def pause_until_next_user_input(message='Press enter to continue...')
+    print_formatted message
     gets
   end
 end

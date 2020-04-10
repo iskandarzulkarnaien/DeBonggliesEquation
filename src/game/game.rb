@@ -54,7 +54,6 @@ class Game
     @board = tiles_string.nil? ? generate_random_board : Board.new(BOARD_SIZE, tiles_string)
     # TODO: Remove debug
     # @board = Board.new(BOARD_SIZE, DEBUG_BOARD)
-    @created_at = Time.now
     @points = 0
     @played_words = Set.new
     @valid_words = Solver.new(dictionary, @board).valid_words
@@ -62,7 +61,14 @@ class Game
     # Values assigned in subclasses
     @duration = nil
     @type = nil
+
+    # Value assigned on game start
+    @start_time = nil
     # puts "Debug: is_valid_option?: Num valid words == #{@valid_words.length}"
+  end
+
+  def start
+    @start_time = Time.now
   end
 
   def calculate_points(word)
@@ -86,7 +92,7 @@ class Game
   end
 
   def game_over?
-    Time.now > (@created_at + @duration)
+    Time.now > (@start_time + @duration)
   end
 
   def custom_game?
@@ -94,7 +100,7 @@ class Game
   end
 
   def time_remaining
-    (@created_at + @duration - Time.now).to_i
+    (@start_time + @duration - Time.now).to_i
   end
 
   def board_tiles
