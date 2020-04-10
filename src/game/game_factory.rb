@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GameFactory
   def self.create_preset_game(tiles_string, dictionary, type)
     case type

@@ -99,10 +99,10 @@ class DeBoggliesEquation
     end
     @options_msg << 'Enter Option:'
 
-    # Todo: Store the below in json file
-    # Todo: Refactor the below to be less hardcody
+    # TODO: Store the below in json file
+    # TODO: Refactor the below to be less hardcody
     @highscore = {}
-    Game::GAME_TYPES.each {|type| @highscore[type] = 0 unless type == :custom }
+    Game::GAME_TYPES.each { |type| @highscore[type] = 0 unless type == :custom }
     @highscore[:average] = 0
 
     @dictionary = make_dictionary(DICTIONARY_PATH)
@@ -131,7 +131,7 @@ class DeBoggliesEquation
   # rubocop:enable Metrics/MethodLength, Style/RedundantBegin
 
   def random_start
-    game_type = get_game_type
+    game_type = request_game_type
     duration = request_duration if game_type == :custom
 
     game = initialize_game(nil, game_type, duration)
@@ -140,7 +140,7 @@ class DeBoggliesEquation
 
   def custom_start
     user_board = request_user_board
-    game_type = get_game_type
+    game_type = request_game_type
     duration = request_duration if game_type == :custom
 
     game = initialize_game(user_board, game_type, duration)
@@ -149,7 +149,9 @@ class DeBoggliesEquation
 
   def view_highscore
     highscore_msg = ["Your Highscores are:\n"]
-    @highscore.each {|type, value| highscore_msg << "#{type.capitalize} Games - #{value} points" unless type == :average}
+    @highscore.each do |type, value|
+      highscore_msg << "#{type.capitalize} Games - #{value} points" unless type == :average
+    end
     highscore_msg << "Average highscore - #{@highscore[:average]} points/second"
 
     print_formatted highscore_msg.join("\n")
@@ -157,7 +159,7 @@ class DeBoggliesEquation
   end
 
   def reset_highscore
-    @highscore.each { |type, value| @highscore[type] = 0 }
+    @highscore.transform_values { 0 }
     print_formatted 'Your Highscores have all been reset to 0!'
     pause_until_next_user_input
   end
@@ -202,26 +204,48 @@ class DeBoggliesEquation
     exit
   end
 
-  def get_game_type
-    # Todo: Refactor, do not hardcode message, have them based on actual durations of each game type
+  # TODO: Refactor
+  # Linting has been disabled as this section is marked for refactor
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
+  def request_game_type
+    # TODO: Refactor, do not hardcode message, have them based on actual durations of each game type
     game_types = {
-      "1" => { :type => Game::GAME_TYPES[0], :message => "Short Game, 2 Minutes" },
-      "2" => { :type => Game::GAME_TYPES[1], :message => "Classic Game, 3 Minutes" },
-      "3" => { :type => Game::GAME_TYPES[2], :message => "Long Game, 5 Minutes" },
-      "4" => { :type => Game::GAME_TYPES[3], :message => "Custom Game Length (Not eligible for highscore!)"},
-      "5" => { :type => Game::GAME_TYPES[4], :message => "Sandbox Game, Infinite Duration (Take as long as you like!)"}
+      '1' => {
+        type: Game::GAME_TYPES[0],
+        message: 'Short Game, 2 Minutes'
+      },
+      '2' => {
+        type: Game::GAME_TYPES[1],
+        message: 'Classic Game, 3 Minutes'
+      },
+      '3' => {
+        type: Game::GAME_TYPES[2],
+        message: 'Long Game, 5 Minutes'
+      },
+      '4' => {
+        type: Game::GAME_TYPES[3],
+        message: 'Custom Game Length (Not eligible for highscore!)'
+      },
+      '5' => {
+        type: Game::GAME_TYPES[4],
+        message: 'Sandbox Game, Infinite Duration (Take as long as you like!)'
+      }
     }
 
-    game_type_msg = ["Please select a duration option:"]
-    game_types.keys.each {|type| game_type_msg << "#{type}. #{game_types[type][:message]}" }
-    while true
+    game_type_msg = ['Please select a duration option:']
+    game_types.keys.each { |type| game_type_msg << "#{type}. #{game_types[type][:message]}" }
+
+    choice = nil
+    loop do
       choice = request_input game_type_msg.join("\n")
       break if game_types.keys.include?(choice)
-      print_formatted "Invalid duration option selected!"
+
+      print_formatted 'Invalid duration option selected!'
     end
 
     game_types[choice][:type]
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
 
   def request_duration
     duration = nil
@@ -249,11 +273,12 @@ class DeBoggliesEquation
 
   def initialize_game(board, type, duration)
     print_formatted 'Initializing game, this may take a moment...'
-    if duration.nil?
-      game = GameFactory.create_preset_game(board, @dictionary, type)
-    else
-      game = GameFactory.create_custom_game(board, @dictionary, duration)
-    end
+    game =
+      if duration.nil?
+        GameFactory.create_preset_game(board, @dictionary, type)
+      else
+        GameFactory.create_custom_game(board, @dictionary, duration)
+      end
     # print_formatted "Debug: Game with board #{game.get_board_tiles} created"
     game
   end
@@ -265,7 +290,7 @@ class DeBoggliesEquation
     # print_formatted 'Debug: start_playing run'
 
     formatted_board = format_displayed_board(game)
-    # Todo: Display as "You have x mins and y seconds" or "You have y seconds" if x+y < 1min
+    # TODO: Display as "You have x mins and y seconds" or "You have y seconds" if x+y < 1min
     game_message = "The game has started. You have #{game.duration}s. Good luck!"
 
     print_formatted "#{formatted_board}#{game_message}"
@@ -325,7 +350,8 @@ class DeBoggliesEquation
     print_formatted "The game is now over! You scored #{game.points} points in #{game.duration}s"
 
     if !game.custom_game? && game.points > @highscore[game.type]
-      print_formatted "Congratulations! A new highscore of #{game.points} compared to #{@highscore[game.type]}"
+      print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
+                      "#{@highscore[game.type]}"
       @highscore = game.points
     end
     pause_until_next_user_input
@@ -369,7 +395,7 @@ class DeBoggliesEquation
   end
 
   def pause_until_next_user_input
-    print_formatted "Press enter to continue..."
+    print_formatted 'Press enter to continue...'
     gets
   end
 end

@@ -47,7 +47,7 @@ class Game
   # TODO: Remove debug (or better yet, shift to tests :P)
   DEBUG_BOARD = 'TAP*EAKSOBRSS*XD' # Gives words: 585
 
-  GAME_TYPES = [:short, :classic, :long, :custom, :sandbox]
+  GAME_TYPES = %i[short classic long custom sandbox].freeze
 
   # Not supposed to be instantiated, only for subclasses to use
   def initialize(tiles_string, dictionary)
@@ -58,9 +58,9 @@ class Game
     @points = 0
     @played_words = Set.new
     @valid_words = Solver.new(dictionary, @board).valid_words
-    
+
     # Values assigned in subclasses
-    @duration = nil 
+    @duration = nil
     @type = nil
     # puts "Debug: is_valid_option?: Num valid words == #{@valid_words.length}"
   end
