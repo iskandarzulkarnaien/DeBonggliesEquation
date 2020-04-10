@@ -158,10 +158,29 @@ class DeBoggliesEquation
   end
 
   def get_duration
+    game_durations = { 
+      "1" => { :type => "Short", :message => "Short Game, 2 Minutes", :duration => 120 },
+      "2" => { :type => "Classic", :message => "Classic Game, 3 Minutes", :duration => 180 },
+      "3" => { :type => "Long", :message => "Long Game, 5 Minutes", :duration => 240 },
+      "4" => { :type => "Custom", :message => "Custom Game Length (Not eligible for highscore!)"}
+    }
+
+    durations_msg = "Please select a duration option:\n"
+    game_durations.keys.each {|type| durations_msg << "#{type}. #{game_durations[type][:message]}\n" }
     while true
-      duration = request_input "Please enter the game's duration, in seconds"
-      break if is_valid_duration?(duration)
-      print_formatted "Your duration is invalid!"
+      choice = request_input durations_msg
+      break if game_durations.keys.include?(choice)
+      print_formatted "Invalid duration option selected!"
+    end
+
+    if game_durations[choice.to_s][:type] == "Custom"
+      while true
+        duration = request_input "Please enter the game's duration, in seconds"
+        break if is_valid_duration?(duration)
+        print_formatted "Your duration is invalid!"
+      end
+    else
+      duration = game_durations[choice.to_s][:duration]
     end
     duration.to_i
   end
@@ -186,6 +205,7 @@ class DeBoggliesEquation
     # print_formatted "Debug: start_playing run"
 
     formatted_board = format_2D_board(game)
+    # Todo: Display as "You have x mins and y seconds" or "You have y seconds" if x+y < 1min
     game_message = "The game has started. You have #{game.duration}s. Good luck!"
 
     print_formatted (formatted_board + game_message) 
