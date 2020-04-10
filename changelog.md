@@ -7,6 +7,7 @@ Change Log:
 - Added separate highscores for each game category except custom, including an "average points per second" category
 - Added pauses between most actions, to allow players to see the output better
 - Add confirmation before game start to prevent timer from starting before player is ready to begin
+- Display maximum attainable score on game end
 
 # alpha-v1.0.1
 Hotfix to correct typo in startup message.
