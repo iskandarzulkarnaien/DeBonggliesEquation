@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DictionaryTrie
   def initialize
     @sub_tries = {}           # A Trie is a hash of hashes.

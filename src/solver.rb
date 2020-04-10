@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'dictionary_trie.rb'
 
 require 'Set'
