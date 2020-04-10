@@ -321,10 +321,10 @@ class DeBoggliesEquation
   def handle_game_over(game)
     print_formatted "The game is now over! You scored #{game.points} points in #{game.duration}s"
 
-    return unless game.points > @highscore
-
-    print_formatted "Congratulations! A new highscore of #{game.points} compared to #{@highscore}"
-    @highscore = game.points
+    if !game.custom_game? && game.points > @highscore[game.type]
+      print_formatted "Congratulations! A new highscore of #{game.points} compared to #{@highscore[game.type]}"
+      @highscore = game.points
+    end
     # TODO: Prompt whether want to play again
   end
 

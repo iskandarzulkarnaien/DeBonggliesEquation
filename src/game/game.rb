@@ -89,6 +89,10 @@ class Game
     Time.now > (@created_at + @duration)
   end
 
+  def custom_game?
+    @type == :custom
+  end
+
   def time_remaining
     (@created_at + @duration - Time.now).to_i
   end
