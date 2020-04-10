@@ -365,7 +365,7 @@ class DeBoggliesEquation
   end
 
   def pause_until_next_user_input
-    print_formatted "Press any key to continue..."
+    print_formatted "Press enter to continue..."
     gets
   end
 end
