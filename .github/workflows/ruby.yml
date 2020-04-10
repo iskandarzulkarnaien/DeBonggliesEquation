@@ -23,5 +23,6 @@ jobs:
 #         bundle install --jobs 4 --retry 3
 #         bundle exec rake
     - name: Rubocop checks
-      uses: gimenete/rubocop-action@1.0
-
+      run: |
+        gem install rubocop
+        rubocop

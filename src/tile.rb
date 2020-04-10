@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Tile
   attr_accessor :letter, :row, :col
 
