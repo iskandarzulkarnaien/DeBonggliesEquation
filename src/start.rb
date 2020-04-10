@@ -86,7 +86,11 @@ class DeBoggliesEquation
     @options_msg << "Enter Option:"
 
     # Todo: Store the below in json file
-    @highscore = Game::GAME_TYPES.product([0]).to_h
+    # Todo: Refactor the below to be less hardcody
+    @highscore = {}
+    Game::GAME_TYPES.each {|type| @highscore[type] = 0 unless type == :custom }
+    @highscore[:average] = 0
+
     @dictionary = make_dictionary(DICTIONARY_PATH)
   end
 
@@ -125,12 +129,18 @@ class DeBoggliesEquation
   end
 
   def view_highscore
-    print_formatted "Your Highscore is #{@highscore}!"
+    highscore_msg = ["Your Highscores are:\n"]
+    @highscore.each {|type, value| highscore_msg << "#{type.capitalize} Games - #{value} points" unless type == :average}
+    highscore_msg << "Average highscore - #{@highscore[:average]} points/second"
+
+    print_formatted highscore_msg.join("\n")
+    pause_until_next_user_input
   end
 
   def reset_highscore
-    @highscore = 0
-    print_formatted "Your Highscore has been reset to 0!"
+    @highscore.each { |type, value| @highscore[type] = 0 }
+    print_formatted "Your Highscores have all been reset to 0!"
+    pause_until_next_user_input
   end
 
   def import_dictionary
@@ -175,10 +185,10 @@ class DeBoggliesEquation
       "5" => { :type => Game::GAME_TYPES[4], :message => "Sandbox Game, Infinite Duration (Take as long as you like!)"}
     }
 
-    game_type_msg = "Please select a duration option:\n"
-    game_types.keys.each {|type| game_type_msg << "#{type}. #{game_types[type][:message]}\n" }
+    game_type_msg = ["Please select a duration option:"]
+    game_types.keys.each {|type| game_type_msg << "#{type}. #{game_types[type][:message]}" }
     while true
-      choice = request_input game_type_msg
+      choice = request_input game_type_msg.join("\n")
       break if game_types.keys.include?(choice)
       print_formatted "Invalid duration option selected!"
     end
@@ -315,6 +325,13 @@ class DeBoggliesEquation
     File.open(dictionary_path).each { |word| dictionary.insert(word.chomp.upcase) }
     dictionary
   end
+
+  def pause_until_next_user_input
+    print_formatted "Press any key to continue..."
+    gets
+  end
 end
 
+puts "Starting Application..."
+puts "Please stand by..."
 DeBoggliesEquation.new.start
