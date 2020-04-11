@@ -1,14 +1,15 @@
+# frozen_string_literal: true
+
 class ActionHandler
   PLACEHOLDER_MESSAGE = 'This feature is not yet implemented.'
-  @@current_action_handler = nil
+  @current_action_handler = nil
 
-  def initialize(args = nil)
-    @@current_action_handler ||= self
-    @@current_action_handler
+  def initialize
+    @current_action_handler = self
   end
 
   def self.current
-    @@current_action_handler || self.new
+    @current_action_handler || new
   end
 
   def action_message(action)
