@@ -122,6 +122,8 @@ class DeBoggliesEquation
   end
   # rubocop:enable Metrics/MethodLength, Style/RedundantBegin
 
+  # OPTIONS METHODS
+
   def random_start
     game_type = request_game_type
     duration = request_duration if game_type == :custom
@@ -181,6 +183,8 @@ class DeBoggliesEquation
     sleep(3)
     exit
   end
+
+  # Helper Methods
 
   # TODO: Refactor
   # Linting has been disabled as this section is marked for refactor
