@@ -6,7 +6,7 @@ require_relative '../solver.rb'
 require 'Set'
 
 class Game
-  attr_accessor :duration, :max_points, :points, :type
+  attr_accessor :duration, :max_points, :points, :type, :description
 
   # Standard Boggle Dice Configuration Obtained From:
   # https://boardgames.stackexchange.com/questions/29264/boggle-what-is-the-dice-configuration-for-boggle-in-various-languages
@@ -50,13 +50,13 @@ class Game
   GAME_TYPES = %i[short classic long custom sandbox].freeze
 
   # Not supposed to be instantiated, only for subclasses to use
-  def initialize(tiles_string, dictionary)
+  def initialize(tiles_string, solver)
     @board = tiles_string.nil? ? generate_random_board : Board.new(BOARD_SIZE, tiles_string)
     # TODO: Remove debug
     # @board = Board.new(BOARD_SIZE, DEBUG_BOARD)
     @points = 0
     @played_words = Set.new
-    @valid_words = Solver.new(dictionary, @board).valid_words
+    @valid_words = solver.solve_boggle(@board)
     @max_points = calculate_max_points
 
     # Values assigned in subclasses
@@ -76,12 +76,9 @@ class Game
     POINTS_MAPPING[word.length.to_s] if @valid_words.include?(word)
   end
 
-  def increment_points(points)
-    @points += points
-  end
-
   def play_word(word)
     @played_words << word
+    increment_points(calculate_points(word))
   end
 
   def valid_word?(word)
@@ -109,6 +106,10 @@ class Game
   end
 
   private
+
+  def increment_points(points)
+    @points += points
+  end
 
   def calculate_max_points
     max_points = 0

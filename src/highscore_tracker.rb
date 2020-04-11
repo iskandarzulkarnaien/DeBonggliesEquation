@@ -1,18 +1,24 @@
 # frozen_string_literal: true
 
-require_relative './game/game.rb'
-require_relative './highscore/highscore.rb'
-require_relative './highscore/normal_highscore.rb'
-require_relative './highscore/average_highscore.rb'
+require_relative './games/game.rb'
+require_relative './highscores/highscore.rb'
+require_relative './highscores/normal_highscore.rb'
+require_relative './highscores/average_highscore.rb'
 
+# TODO: Proper singleton pattern
 class HighscoreTracker
   # TODO: Find a way to remove hardcoded values
   INELIGIBLE_GAMES = [:custom].freeze
   AVERAGED_SCORE_GAMES = [:average].freeze
   NORMAL_GAMES = (Game::GAME_TYPES - INELIGIBLE_GAMES - AVERAGED_SCORE_GAMES).freeze
 
+  # Allows access to class-level variable
+  class << self; attr_accessor :current end
+  @current = nil
+
   def initialize(args = nil)
     @highscores = args.nil? ? initialize_defaults : load_highscores
+    HighscoreTracker.current = self
   end
 
   def reset_highscore
