@@ -3,7 +3,7 @@
 class AverageHighscore < Highscore
   def initialize(*args)
     super(*args)
-    @divisor = "second" # TODO: Refactor hardcoded value
+    @divisor = 'second' # TODO: Refactor hardcoded value
   end
 
   def to_s

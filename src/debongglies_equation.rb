@@ -343,13 +343,18 @@ class DeBoggliesEquation
     print_formatted "The game is now over! You scored #{game.points} points in "\
                     "#{game.duration}s.\nThe maximum score was: #{game.max_points} points"
 
-    if @highscore_tracker.eligible_for_update?(game.type, game.points)
-      print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
-                      "#{@highscore_tracker.find_highscore(game.type)}"
-      @highscore_tracker.update_highscore(game.type, game.points)
-    end
+    handle_highscore_update
+
     pause_until_next_user_input
     # TODO: Prompt whether want to play again
+  end
+
+  def handle_highscore_update(game)
+    return unless @highscore_tracker.eligible_for_update?(game.type, game.points)
+
+    print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
+                    "#{@highscore_tracker.find_highscore(game.type)}"
+    @highscore_tracker.update_highscore(game.type, game.points)
   end
 
   def valid_duration?(duration)
@@ -394,7 +399,7 @@ class DeBoggliesEquation
   end
 
   def formatted_highscore
-    "Your Highscores are:\n#{@highscore_tracker.to_s}"
+    "Your Highscores are:\n#{@highscore_tracker}"
   end
 end
 # rubocop:enable Metrics/ClassLength

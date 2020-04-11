@@ -7,16 +7,16 @@ require_relative './highscore/average_highscore.rb'
 
 class HighscoreTracker
   # TODO: Find a way to remove hardcoded values
-  INELIGIBLE_GAMES = [:custom]
-  AVERAGED_SCORE_GAMES = [:average]
-  NORMAL_GAMES = Game::GAME_TYPES - INELIGIBLE_GAMES - AVERAGED_SCORE_GAMES
+  INELIGIBLE_GAMES = [:custom].freeze
+  AVERAGED_SCORE_GAMES = [:average].freeze
+  NORMAL_GAMES = (Game::GAME_TYPES - INELIGIBLE_GAMES - AVERAGED_SCORE_GAMES).freeze
 
   def initialize(args = nil)
     @highscores = args.nil? ? initialize_defaults : load_highscores
   end
 
   def reset_highscore
-    @highscores.each { |highscore| highscore.reset_value }
+    @highscores.each(&:reset_value)
   end
 
   def find_highscore(type)
@@ -40,18 +40,19 @@ class HighscoreTracker
   def initialize_defaults
     highscores = []
     NORMAL_GAMES.each { |game_type| highscores << NormalHighscore.new(game_type, 0) }
-    AVERAGED_SCORE_GAMES.each { |game_type| highscores << AverageHighscore.new(game_type , 0) }
+    AVERAGED_SCORE_GAMES.each { |game_type| highscores << AverageHighscore.new(game_type, 0) }
     highscores
   end
 
   def load_highscores
     highscores = []
     args.each_pair do |key, value|
-      if AVERAGED_SCORE_GAMES.include?(key)
-        highscore << AverageHighscore.new(key, value)
-      else
-        highscore << NormalHighscore.new(key, value)
-      end
+      highscore <<
+        if AVERAGED_SCORE_GAMES.include?(key)
+          AverageHighscore.new(key, value)
+        else
+          NormalHighscore.new(key, value)
+        end
     end
     highscores
   end
