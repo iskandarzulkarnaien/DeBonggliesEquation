@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'highscore_tracker.rb'
 require_relative 'dictionary_trie.rb'
 require_relative 'game/game.rb'
 require_relative 'game/game_factory.rb'
@@ -100,11 +101,7 @@ class DeBoggliesEquation
     @options_msg << 'Enter Option:'
 
     # TODO: Store the below in json file
-    # TODO: Refactor the below to be less hardcody
-    @highscore = {}
-    Game::GAME_TYPES.each { |type| @highscore[type] = 0 unless type == :custom }
-    @highscore[:average] = 0
-
+    @highscore_tracker = HighscoreTracker.new
     @dictionary = make_dictionary(DICTIONARY_PATH)
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
@@ -148,18 +145,12 @@ class DeBoggliesEquation
   end
 
   def view_highscore
-    highscore_msg = ["Your Highscores are:\n"]
-    @highscore.each do |type, value|
-      highscore_msg << "#{type.capitalize} Games - #{value} points" unless type == :average
-    end
-    highscore_msg << "Average highscore - #{@highscore[:average]} points/second"
-
-    print_formatted highscore_msg.join("\n")
+    print_formatted formatted_highscore
     pause_until_next_user_input
   end
 
   def reset_highscore
-    @highscore.transform_values { 0 }
+    @highscore_tracker.reset_highscore
     print_formatted 'Your Highscores have all been reset to 0!'
     pause_until_next_user_input
   end
@@ -352,13 +343,18 @@ class DeBoggliesEquation
     print_formatted "The game is now over! You scored #{game.points} points in "\
                     "#{game.duration}s.\nThe maximum score was: #{game.max_points} points"
 
-    if eligible_for_new_highscore(game)
-      print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
-                      "#{@highscore[game.type]}"
-      @highscore = game.points
-    end
+    handle_highscore_update
+
     pause_until_next_user_input
     # TODO: Prompt whether want to play again
+  end
+
+  def handle_highscore_update(game)
+    return unless @highscore_tracker.eligible_for_update?(game.type, game.points)
+
+    print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
+                    "#{@highscore_tracker.find_highscore(game.type)}"
+    @highscore_tracker.update_highscore(game.type, game.points)
   end
 
   def valid_duration?(duration)
@@ -402,8 +398,8 @@ class DeBoggliesEquation
     gets
   end
 
-  def eligible_for_new_highscore(game)
-    !game.custom_game? && game.points > @highscore[game.type]
+  def formatted_highscore
+    "Your Highscores are:\n#{@highscore_tracker}"
   end
 end
 # rubocop:enable Metrics/ClassLength
