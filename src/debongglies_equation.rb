@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'ui.rb'
+require_relative 'input_validator.rb'
 require_relative 'highscore_tracker.rb'
 require_relative 'dictionary_trie.rb'
 require_relative 'game/game.rb'
@@ -15,12 +17,12 @@ require 'tk'
 # TODO: Display easter egg message if "DEBONGE" or "DEBONGEH" was played
 # TODO: "Congrats! HOTEL was worth TRIVAGO"
 
-# TODO: Remove placeholder message
-
 # TODO: Refactor class to separate components (e.g. UI/Logic)
 # Linting disabled as this section has been marked for refactor
 # rubocop:disable Metrics/ClassLength
 class DeBoggliesEquation
+  include Ui, InputValidator
+
   PLACEHOLDER_MESSAGE = 'This feature is not yet implemented.'
 
   DICTIONARY_PATH = File.join(File.dirname(__FILE__), '../data/default_dictionary.txt')
@@ -95,7 +97,7 @@ class DeBoggliesEquation
     end
     @options_msg << 'Enter Option:'
 
-    # TODO: Store the below in json file
+    # TODO: Store relevant data (e.g. highscores) in json file
     @highscore_tracker = HighscoreTracker.new
     @dictionary = make_dictionary(DICTIONARY_PATH)
   end
@@ -106,14 +108,14 @@ class DeBoggliesEquation
   # rubocop:disable Metrics/MethodLength, Style/RedundantBegin
   def start
     begin
-      print_formatted WELCOME_MESSAGE
+      Ui.print_formatted WELCOME_MESSAGE
       loop do
-        choice = request_input @options_msg.join("\n")
+        choice = Ui.request_input @options_msg.join("\n")
 
         if valid_option?(choice)
           @options[choice][:action].call
         else
-          print_formatted 'Invalid option selected!' unless @options.keys.include?(choice)
+          Ui.print_formatted 'Invalid option selected!'
         end
       end
     rescue StandardError => e
@@ -142,42 +144,42 @@ class DeBoggliesEquation
   end
 
   def view_highscore
-    print_formatted formatted_highscore
-    pause_until_next_user_input
+    Ui.print_formatted Ui.formatted_highscore(@highscore_tracker)
+    Ui.pause_until_next_user_input
   end
 
   def reset_highscore
     @highscore_tracker.reset_highscore
-    print_formatted 'Your Highscores have all been reset to 0!'
-    pause_until_next_user_input
+    Ui.print_formatted 'Your Highscores have all been reset to 0!'
+    Ui.pause_until_next_user_input
   end
 
   def import_dictionary
     user_dictionary_path = Tk.getOpenFile('title' => 'Select new dictionary',
                                           'filetypes' => '{{Text} {.txt}}')
     if user_dictionary_path.empty?
-      print_formatted 'Dictionary import cancelled'
+      Ui.print_formatted 'Dictionary import cancelled'
     else
       @dictionary = make_dictionary(user_dictionary_path)
-      print_formatted 'New dictionary successfully loaded'
+      Ui.print_formatted 'New dictionary successfully loaded'
     end
-    pause_until_next_user_input
+    Ui.pause_until_next_user_input
   end
 
   def reset_dictionary
     @dictionary = make_dictionary(DICTIONARY_PATH)
-    print_formatted 'Default dictionary successfully loaded'
-    pause_until_next_user_input
+    Ui.print_formatted 'Default dictionary successfully loaded'
+    Ui.pause_until_next_user_input
   end
 
   def help
     # TODO: Create help message
-    print_formatted PLACEHOLDER_MESSAGE
-    pause_until_next_user_input
+    Ui.print_formatted PLACEHOLDER_MESSAGE
+    Ui.pause_until_next_user_input
   end
 
   def exit_program
-    print_formatted 'Goodbye! Thanks for playing!'
+    Ui.print_formatted 'Goodbye! Thanks for playing!'
     handle_shutdown
     # TODO: Remove this sleep and shift it somewhere else
     sleep(3)
@@ -219,10 +221,10 @@ class DeBoggliesEquation
 
     choice = nil
     loop do
-      choice = request_input game_type_msg.join("\n")
+      choice = Ui.request_input game_type_msg.join("\n")
       break if game_types.keys.include?(choice)
 
-      print_formatted 'Invalid duration option selected!'
+      Ui.print_formatted 'Invalid duration option selected!'
     end
 
     game_types[choice][:type]
@@ -232,10 +234,10 @@ class DeBoggliesEquation
   def request_duration
     duration = nil
     loop do
-      duration = request_input 'Please enter the game\'s duration, in seconds'
-      break if valid_duration?(duration)
+      duration = Ui.request_input 'Please enter the game\'s duration, in seconds'
+      break if InputValidator.valid_duration?(duration)
 
-      print_formatted 'Your duration is invalid!'
+      Ui.print_formatted 'Your duration is invalid!'
     end
 
     duration.to_i
@@ -244,24 +246,24 @@ class DeBoggliesEquation
   def request_user_board
     user_board = nil
     loop do
-      user_board = request_input  'Please enter a 16 Letter Board. Valid characters are A-Z and *,'\
+      user_board = Ui.request_input  'Please enter a 16 Letter Board. Valid characters are A-Z and *,'\
                                   'which can be any character'
-      break if valid_board?(user_board)
+      break if InputValidator.valid_board?(user_board)
 
-      print_formatted 'Your board contains invalid characters!'
+      Ui.print_formatted 'Your board contains invalid characters!'
     end
     user_board
   end
 
   def initialize_game(board, type, duration)
-    print_formatted 'Initializing game, this may take a moment...'
+    Ui.print_formatted 'Initializing game, this may take a moment...'
     game =
       if duration.nil?
         GameFactory.create_preset_game(board, @dictionary, type)
       else
         GameFactory.create_custom_game(board, @dictionary, duration)
       end
-    # print_formatted "Debug: Game with board #{game.get_board_tiles} created"
+    # Ui.print_formatted "Debug: Game with board #{game.get_board_tiles} created"
     game
   end
 
@@ -274,29 +276,29 @@ class DeBoggliesEquation
   end
 
   def await_user_confirmation_before_start(game, formatted_board)
-    pause_until_next_user_input('Game generated. Press enter to begin')
+    Ui.pause_until_next_user_input('Game generated. Press enter to begin')
     game.start
 
     # TODO: Display as "You have x mins and y seconds" or "You have y seconds" if x+y < 1min
     game_message = "The game has started. You have #{game.duration}s. Good luck!"
 
-    print_formatted "#{formatted_board}#{game_message}"
+    Ui.print_formatted "#{formatted_board}#{game_message}"
   end
 
   def play_game_until_over(game, formatted_board)
     # TODO: How about some loop that 'ticks' every second
     loop do
-      word = request_input 'Please key in your word'
+      word = Ui.request_input 'Please key in your word'
 
       if game.game_over?
-        print_formatted 'Sorry! You ran out of time'
+        Ui.print_formatted 'Sorry! You ran out of time'
         break
       end
 
       word_result = play_word(word, game)
 
-      print_formatted word_result
-      print_formatted "#{formatted_board}You have #{game.time_remaining}s left!"
+      Ui.print_formatted word_result
+      Ui.print_formatted "#{formatted_board}You have #{game.time_remaining}s left!"
     end
   end
 
@@ -338,36 +340,22 @@ class DeBoggliesEquation
   end
 
   def handle_game_over(game)
-    print_formatted "The game is now over! You scored #{game.points} "\
+    Ui.print_formatted "The game is now over! You scored #{game.points} "\
                     "point#{'s' if game.points > 1} in #{game.duration}s."\
                     "\nThe maximum score was: #{game.max_points} points"
 
     handle_highscore_update(game)
 
-    pause_until_next_user_input
+    Ui.pause_until_next_user_input
     # TODO: Prompt whether want to play again
   end
 
   def handle_highscore_update(game)
     return unless @highscore_tracker.eligible_for_update?(game.type, game.points)
 
-    print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
+    Ui.print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
                     "#{@highscore_tracker.find_highscore(game.type)}"
     @highscore_tracker.update_highscore(game.type, game.points)
-  end
-
-  def valid_duration?(duration)
-    # TODO: This looks hacky, find a better way to check if integer
-    # Linting suppressed as this line has been marked for refactor
-    # rubocop:disable Style/RescueModifier, Lint/RedundantCopDisableDirective
-    Integer(duration) rescue false
-    # rubocop:enable Style/RescueModifier, Lint/RedundantCopDisableDirective
-  end
-
-  def valid_board?(board)
-    # print_formatted "Debug: valid_board? run"
-    # TODO: Remove hardcoded value
-    board.length == 16 && !board.match(/[^A-Z*]/)
   end
 
   # TODO: Find a better way to do this
@@ -375,30 +363,10 @@ class DeBoggliesEquation
     ('1'..@options.size.to_s).include?(option)
   end
 
-  def print_formatted(message)
-    sleep(0.1) # Instantaenous output is hard to follow and may seem too overwhelming for some users
-    puts "\n#{message}\n"
-  end
-
-  def request_input(message)
-    print_formatted message
-    print '>>> '
-    gets.chomp.strip.upcase
-  end
-
   def make_dictionary(dictionary_path)
     dictionary = DictionaryTrie.new
     File.open(dictionary_path).each { |word| dictionary.insert(word.chomp.upcase) }
     dictionary
-  end
-
-  def pause_until_next_user_input(message = 'Press enter to continue...')
-    print_formatted message
-    gets
-  end
-
-  def formatted_highscore
-    "Your Highscores are:\n#{@highscore_tracker}"
   end
 end
 # rubocop:enable Metrics/ClassLength
