@@ -2,6 +2,10 @@
 
 require_relative 'debongglies_equation.rb'
 
-puts 'Starting Application...'
-puts 'Please stand by...'
+PRE_START_MESSAGES = [
+  'Starting Application...',
+  'Please stand by...'
+]
+
+puts PRE_START_MESSAGES.join("\n")
 DeBoggliesEquation.new.start
