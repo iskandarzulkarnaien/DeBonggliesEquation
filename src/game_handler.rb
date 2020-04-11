@@ -7,8 +7,6 @@ require_relative 'ui.rb'
 require_relative 'highscore_tracker.rb'
 require_relative 'user_input_handler.rb'
 
-# TODO: Rename to GameHandler to match pattern
-# TODO: Proper singleton pattern
 class GameHandler
   include Ui
 
