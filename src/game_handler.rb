@@ -122,4 +122,8 @@ class GameHandler
                     "#{HighscoreTracker.current.find_highscore(game.type)}"
     HighscoreTracker.current.update_highscore(game.type, game.points)
   end
+
+  def create_placeholder_games
+    GameFactory.create_placeholder_games(@solver)
+  end
 end

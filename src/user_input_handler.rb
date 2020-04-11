@@ -10,43 +10,24 @@ module UserInputHandler
   # TODO: Refactor
   # Linting has been disabled as this section is marked for refactor
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
-  def self.request_game_type
-    # TODO: Refactor, do not hardcode message, have them based on actual durations of each game type
-    game_types = {
-      '1' => {
-        type: Game::GAME_TYPES[0],
-        message: 'Short Game, 2 Minutes'
-      },
-      '2' => {
-        type: Game::GAME_TYPES[1],
-        message: 'Classic Game, 3 Minutes'
-      },
-      '3' => {
-        type: Game::GAME_TYPES[2],
-        message: 'Long Game, 5 Minutes'
-      },
-      '4' => {
-        type: Game::GAME_TYPES[3],
-        message: 'Custom Game Length (Not eligible for highscore!)'
-      },
-      '5' => {
-        type: Game::GAME_TYPES[4],
-        message: 'Sandbox Game, Infinite Duration (Take as long as you like!)'
-      }
-    }
+  def self.request_game_type(game_handler)
+    game_types = game_handler.create_placeholder_games
 
     game_type_msg = ['Please select a duration option:']
-    game_types.keys.each { |type| game_type_msg << "#{type}. #{game_types[type][:message]}" }
+    (1..game_types.size).each do |type_num|
+      game_type_msg << "#{type_num}. #{game_types[type_num - 1].description}"
+    end
+    game_type_msg << 'Enter Option:'
 
     choice = nil
     loop do
       choice = UserInputHandler.request_input game_type_msg.join("\n")
-      break if game_types.keys.include?(choice)
+      break if InputValidator.valid_integer?(choice) && choice.to_i.between?(1, game_types.size)
 
       Ui.print_formatted 'Invalid duration option selected!'
     end
 
-    game_types[choice][:type]
+    game_types[choice.to_i - 1].type
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
 

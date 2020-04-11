@@ -11,7 +11,7 @@ class RandomStartAction < Action
   end
 
   def execute
-    game_type = UserInputHandler.request_game_type
+    game_type = UserInputHandler.request_game_type(@game_handler)
     duration = UserInputHandler.request_duration if game_type == :custom
 
     game = @game_handler.initialize_game(nil, game_type, duration)

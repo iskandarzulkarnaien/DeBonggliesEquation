@@ -12,7 +12,7 @@ class CustomStartAction < Action
 
   def execute
     user_board = UserInputHandler.request_user_board
-    game_type = UserInputHandler.request_game_type
+    game_type = UserInputHandler.request_game_type(@game_handler)
     duration = UserInputHandler.request_duration if game_type == :custom
 
     game = @game_handler.initialize_game(user_board, game_type, duration)

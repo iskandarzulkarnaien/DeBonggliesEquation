@@ -6,7 +6,7 @@ require_relative '../solver.rb'
 require 'Set'
 
 class Game
-  attr_accessor :duration, :max_points, :points, :type
+  attr_accessor :duration, :max_points, :points, :type, :description
 
   # Standard Boggle Dice Configuration Obtained From:
   # https://boardgames.stackexchange.com/questions/29264/boggle-what-is-the-dice-configuration-for-boggle-in-various-languages
