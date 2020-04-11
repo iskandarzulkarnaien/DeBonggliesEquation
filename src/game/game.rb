@@ -76,12 +76,9 @@ class Game
     POINTS_MAPPING[word.length.to_s] if @valid_words.include?(word)
   end
 
-  def increment_points(points)
-    @points += points
-  end
-
   def play_word(word)
     @played_words << word
+    increment_points(calculate_points(word))
   end
 
   def valid_word?(word)
@@ -109,6 +106,10 @@ class Game
   end
 
   private
+
+  def increment_points(points)
+    @points += points
+  end
 
   def calculate_max_points
     max_points = 0

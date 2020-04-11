@@ -127,7 +127,7 @@ class DeBoggliesEquation
     duration = request_duration if game_type == :custom
 
     game = initialize_game(nil, game_type, duration)
-    start_playing(game)
+    start_game(game)
   end
 
   def custom_start
@@ -136,7 +136,7 @@ class DeBoggliesEquation
     duration = request_duration if game_type == :custom
 
     game = initialize_game(user_board, game_type, duration)
-    start_playing(game)
+    start_game(game)
   end
 
   def view_highscore
@@ -261,20 +261,25 @@ class DeBoggliesEquation
     game
   end
 
-  # TODO: Refactor
-  # Linting disabled as this section has been marked for refactor
-  # rubocop:disable Netrics/AbcSize, Metrics/MethodLength
-  def start_playing(game)
-    # print_formatted 'Debug: start_playing run'
+  def start_game(game)
+    formatted_board = format_displayed_board(game)
+
+    await_user_confirmation_before_start(game, formatted_board)
+    play_game_until_over(game, formatted_board)
+    handle_game_over(game)
+  end
+
+  def await_user_confirmation_before_start(game, formatted_board)
     pause_until_next_user_input('Game generated. Press enter to begin')
     game.start
 
-    formatted_board = format_displayed_board(game)
     # TODO: Display as "You have x mins and y seconds" or "You have y seconds" if x+y < 1min
     game_message = "The game has started. You have #{game.duration}s. Good luck!"
 
     print_formatted "#{formatted_board}#{game_message}"
+  end
 
+  def play_game_until_over(game, formatted_board)
     # TODO: How about some loop that 'ticks' every second
     loop do
       word = request_input 'Please key in your word'
@@ -284,22 +289,24 @@ class DeBoggliesEquation
         break
       end
 
-      # TODO: Refactor by extract method
-      if game.played_word?(word)
-        print_formatted "Oops! Looks like you have already played #{word}"
-      elsif game.valid_word?(word)
-        points = game.calculate_points(word)
-        game.play_word(word)
-        game.increment_points(points)
-        print_formatted "Congrats! #{word} was worth #{points} points"
-      else
-        print_formatted "Sorry! #{word} is not a valid word"
-      end
+      word_result = play_word(word, game)
+
+      print_formatted word_result
       print_formatted "#{formatted_board}You have #{game.time_remaining}s left!"
     end
-    handle_game_over(game)
   end
-  # rubocop:enable Netrics/AbcSize, Metrics/MethodLength
+
+  def play_word(word, game)
+    if game.played_word?(word)
+      "Oops! Looks like you have already played #{word}"
+    elsif game.valid_word?(word)
+      points = game.calculate_points(word)
+      game.play_word(word)
+      "Congrats! #{word} was worth #{points} points"
+    else
+      "Sorry! #{word} is not a valid word"
+    end
+  end
 
   def format_displayed_board(game)
     string_tiles = game.board_tiles
@@ -327,10 +334,11 @@ class DeBoggliesEquation
   end
 
   def handle_game_over(game)
-    print_formatted "The game is now over! You scored #{game.points} points in "\
-                    "#{game.duration}s.\nThe maximum score was: #{game.max_points} points"
+    print_formatted "The game is now over! You scored #{game.points} "\
+                    "point#{'s' if game.points > 1} in #{game.duration}s."\
+                    "\nThe maximum score was: #{game.max_points} points"
 
-    handle_highscore_update
+    handle_highscore_update(game)
 
     pause_until_next_user_input
     # TODO: Prompt whether want to play again
