@@ -1,17 +1,22 @@
+# frozen_string_literal: true
+
 require_relative 'solver.rb'
 require_relative 'games/game_factory.rb'
 require_relative 'dictionary_loader.rb'
 require_relative 'ui.rb'
+require_relative 'highscore_tracker.rb'
+require_relative 'user_input_handler.rb'
 
 # TODO: Rename to GameHandler to match pattern
 # TODO: Proper singleton pattern
 class GameHandler
-  @@current = nil
+  include Ui
+
+  @current = nil
 
   def initialize(dictionary)
     @solver = Solver.new(dictionary)
-    @@current ||= self
-    @@current
+    @current = self
   end
 
   # TODO: Shift this to a more appropriate class
@@ -19,9 +24,9 @@ class GameHandler
     # TODO: Handle shutdown
   end
 
-  # TODO: Fix self.new expecting a dictionary
+  # TODO: Fix new expecting a dictionary
   def self.current
-    @@current || self.new
+    @@current || new
   end
 
   def replace_dictionary(dictionary_path)
@@ -120,5 +125,4 @@ class GameHandler
                     "#{HighscoreTracker.current.find_highscore(game.type)}"
     HighscoreTracker.current.update_highscore(game.type, game.points)
   end
-
 end
