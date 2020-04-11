@@ -4,11 +4,6 @@ require_relative 'highscore_tracker.rb'
 require_relative 'dictionary_trie.rb'
 require_relative 'game/game.rb'
 require_relative 'game/game_factory.rb'
-require_relative 'game/classic_game.rb'
-require_relative 'game/short_game.rb'
-require_relative 'game/long_game.rb'
-require_relative 'game/custom_game.rb'
-require_relative 'game/sandbox_game.rb'
 
 require 'tk'
 

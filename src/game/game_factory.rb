@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require_relative 'game/short_game.rb'
+require_relative 'game/classic_game.rb'
+require_relative 'game/long_game.rb'
+require_relative 'game/sandbox_game.rb'
+require_relative 'game/custom_game.rb'
+
 class GameFactory
   def self.create_preset_game(tiles_string, dictionary, type)
     case type
