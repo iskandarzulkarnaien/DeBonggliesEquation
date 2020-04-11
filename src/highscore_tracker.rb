@@ -20,11 +20,11 @@ class HighscoreTracker
   end
 
   def find_highscore(type)
-    (@highscores.find { |highscore| highscore.type == type }).value
+    find_item(type).value
   end
 
   def update_highscore(type, value)
-    find_highscore(type) = value
+    find_item(type).update_value(value)
   end
 
   def eligible_for_update?(type, value)
@@ -54,6 +54,10 @@ class HighscoreTracker
       end
     end
     highscores
+  end
+
+  def find_item(type)
+    @highscores.find { |highscore| highscore.type == type }
   end
 
   def stringify
