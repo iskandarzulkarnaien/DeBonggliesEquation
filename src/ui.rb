@@ -1,10 +1,4 @@
 module Ui
-  def self.request_input(message)
-    print_formatted message
-    print '>>> '
-    gets.chomp.strip.upcase
-  end
-
   def self.pause_until_next_user_input(message = 'Press enter to continue...')
     print_formatted message
     gets

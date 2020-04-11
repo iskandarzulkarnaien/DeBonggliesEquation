@@ -5,14 +5,23 @@ require_relative './highscores/highscore.rb'
 require_relative './highscores/normal_highscore.rb'
 require_relative './highscores/average_highscore.rb'
 
+# TODO: Proper singleton pattern
 class HighscoreTracker
   # TODO: Find a way to remove hardcoded values
   INELIGIBLE_GAMES = [:custom].freeze
   AVERAGED_SCORE_GAMES = [:average].freeze
   NORMAL_GAMES = (Game::GAME_TYPES - INELIGIBLE_GAMES - AVERAGED_SCORE_GAMES).freeze
 
+  @@current_highscore_tracker = nil
+
   def initialize(args = nil)
     @highscores = args.nil? ? initialize_defaults : load_highscores
+    @@current_highscore_tracker ||= self
+    @@current_highscore_tracker
+  end
+
+  def self.current
+    @@current_highscore_tracker || self.new
   end
 
   def reset_highscore

@@ -50,13 +50,13 @@ class Game
   GAME_TYPES = %i[short classic long custom sandbox].freeze
 
   # Not supposed to be instantiated, only for subclasses to use
-  def initialize(tiles_string, dictionary)
+  def initialize(tiles_string, solver)
     @board = tiles_string.nil? ? generate_random_board : Board.new(BOARD_SIZE, tiles_string)
     # TODO: Remove debug
     # @board = Board.new(BOARD_SIZE, DEBUG_BOARD)
     @points = 0
     @played_words = Set.new
-    @valid_words = Solver.new(dictionary, @board).valid_words
+    @valid_words = solver.solve_boggle(@board)
     @max_points = calculate_max_points
 
     # Values assigned in subclasses
