@@ -8,6 +8,7 @@ require_relative 'game/short_game.rb'
 require_relative 'game/long_game.rb'
 require_relative 'game/custom_game.rb'
 require_relative 'game/sandbox_game.rb'
+require_relative 'highscore/highscores.rb'
 
 require 'tk'
 
@@ -100,10 +101,10 @@ class DeBoggliesEquation
     @options_msg << 'Enter Option:'
 
     # TODO: Store the below in json file
-    # TODO: Refactor the below to be less hardcody
-    @highscore = {}
-    Game::GAME_TYPES.each { |type| @highscore[type] = 0 unless type == :custom }
-    @highscore[:average] = 0
+    # debug_hash = { short: 1, classic: 2, long: 3, custom: 4, sandbox:5 }
+    # @highscore = Highscore.new(*debug_hash.values)
+    @highscore = Highscore.new
+    puts @highscore.inspect
 
     @dictionary = make_dictionary(DICTIONARY_PATH)
   end
@@ -148,18 +149,12 @@ class DeBoggliesEquation
   end
 
   def view_highscore
-    highscore_msg = ["Your Highscores are:\n"]
-    @highscore.each do |type, value|
-      highscore_msg << "#{type.capitalize} Games - #{value} points" unless type == :average
-    end
-    highscore_msg << "Average highscore - #{@highscore[:average]} points/second"
-
-    print_formatted highscore_msg.join("\n")
+    print_formatted formatted_highscore
     pause_until_next_user_input
   end
 
   def reset_highscore
-    @highscore.transform_values { 0 }
+    @highscore.reset_highscore
     print_formatted 'Your Highscores have all been reset to 0!'
     pause_until_next_user_input
   end
@@ -404,6 +399,10 @@ class DeBoggliesEquation
 
   def eligible_for_new_highscore(game)
     !game.custom_game? && game.points > @highscore[game.type]
+  end
+
+  def formatted_highscore
+    "Your Highscores are:\n#{@highscore.to_s}"
   end
 end
 # rubocop:enable Metrics/ClassLength
