@@ -13,7 +13,7 @@ class ResetDictionaryAction < Action
   end
 
   def execute
-    @game_manager.replace_dictionary(DICTIONARY_PATH)
+    @game_handler.replace_dictionary(DICTIONARY_PATH)
     Ui.print_formatted 'Default dictionary successfully loaded'
     Ui.pause_until_next_user_input
   end

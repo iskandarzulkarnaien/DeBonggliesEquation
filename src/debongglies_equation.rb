@@ -6,7 +6,7 @@ require_relative 'input_validator.rb'
 require_relative 'action_handler.rb'
 require_relative 'actions/action_factory.rb'
 require_relative 'highscore_tracker.rb'
-require_relative 'game_manager.rb'
+require_relative 'game_handler.rb'
 require_relative 'dictionary_loader.rb'
 
 class DeBoggliesEquation
@@ -32,7 +32,7 @@ class DeBoggliesEquation
   def initialize
     # TODO: Store relevant data (e.g. highscores) in json file
     @highscore_tracker = HighscoreTracker.new
-    @game_manager = GameManager.new(DictionaryLoader.make_dictionary(DICTIONARY_PATH))
+    @game_handler = GameHandler.new(DictionaryLoader.make_dictionary(DICTIONARY_PATH))
     @action_handler = ActionHandler.new
 
     @all_options = ActionFactory.create_all

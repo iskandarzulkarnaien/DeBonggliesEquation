@@ -13,7 +13,7 @@ class Action
     @message = message
     @type = type
     @highscore_tracker = HighscoreTracker.current
-    @game_manager = GameManager.current_manager
+    @game_handler = GameHandler.current
     @action_handler = ActionHandler.current
   end
 

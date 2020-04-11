@@ -18,7 +18,7 @@ class ImportDictionaryAction < Action
     if user_dictionary_path.empty?
       Ui.print_formatted 'Dictionary import cancelled'
     else
-      @game_manager.replace_dictionary(user_dictionary_path)
+      @game_handler.replace_dictionary(user_dictionary_path)
       Ui.print_formatted 'New dictionary successfully loaded'
     end
     Ui.pause_until_next_user_input

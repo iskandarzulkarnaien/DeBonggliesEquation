@@ -12,7 +12,7 @@ class ExitProgramAction < Action
 
   def execute
     Ui.print_formatted 'Goodbye! Thanks for playing!'
-    @game_manager.handle_shutdown
+    @game_handler.handle_shutdown
     # TODO: Remove this sleep and shift it somewhere else
     sleep(3)
     exit
