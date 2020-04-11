@@ -93,6 +93,10 @@ class Game
     Time.now > (@start_time + @duration)
   end
 
+  def max_points_achieved?
+    @points == @max_points
+  end
+
   def time_remaining
     (@start_time + @duration - Time.now).to_i
   end

@@ -68,22 +68,22 @@ class GameHandler
         break
       end
 
-      word_result = play_word(word, game)
+      play_word(word, game)
+      break if game.max_points_achieved?
 
-      Ui.print_formatted word_result
       Ui.print_formatted "#{formatted_board}You have #{game.time_remaining}s left!"
     end
   end
 
   def play_word(word, game)
     if game.played_word?(word)
-      "Oops! Looks like you have already played #{word}"
+      Ui.print_formatted "Oops! Looks like you have already played #{word}"
     elsif game.valid_word?(word)
       points = game.calculate_points(word)
       game.play_word(word)
-      "Congrats! #{word} was worth #{points} point#{'s' if game.points != 1}"
+      Ui.print_formatted "Congrats! #{word} was worth #{points} point#{'s' if game.points != 1}"
     else
-      "Sorry! #{word} is not a valid word"
+      Ui.print_formatted "Sorry! #{word} is not a valid word"
     end
   end
 
@@ -103,9 +103,14 @@ class GameHandler
   end
 
   def handle_game_over(game)
-    Ui.print_formatted "The game is now over! You scored #{game.points} "\
-                    "point#{'s' if game.points != 1} in #{game.duration}s."\
-                    "\nThe maximum score was: #{game.max_points} points"
+    if game.max_points_achieved?
+      Ui.print_formatted 'Congratulations! You finished the game by scoring the maximum possible '\
+                        "points: #{game.max_points}"
+    else
+      Ui.print_formatted "The game is now over! You scored #{game.points} "\
+                      "point#{'s' if game.points != 1} in #{game.duration}s."\
+                      "\nThe maximum score was: #{game.max_points} points"
+    end
 
     handle_highscore_update(game)
 
@@ -116,8 +121,9 @@ class GameHandler
   def handle_highscore_update(game)
     return unless HighscoreTracker.current.eligible_for_update?(game.type, game.points)
 
-    Ui.print_formatted "Congratulations! A new highscore of #{game.points} compared to "\
-                    "#{HighscoreTracker.current.find_highscore(game.type)}"
+    Ui.print_formatted "Congratulations! You have achieved a new highscore of #{game.points} "\
+                      "points for #{game.type} games.\nYour previous highscore was: "\
+                      "#{HighscoreTracker.current.find_highscore(game.type)} points"
     HighscoreTracker.current.update_highscore(game.type, game.points)
   end
 
