@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require_relative '../ui.rb'
 require_relative '../user_input_handler.rb'
 
 class Action
-  include Ui, UserInputHandler
+  include Ui
+  include UserInputHandler
 
   attr_accessor :message
 
-  # Params are provided by subclasses
   def initialize(message, type)
     @message = message
     @type = type

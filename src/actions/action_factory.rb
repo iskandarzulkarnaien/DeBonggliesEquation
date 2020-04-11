@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'random_start_action.rb'
 require_relative 'custom_start_action.rb'
 require_relative 'view_highscore_action.rb'
