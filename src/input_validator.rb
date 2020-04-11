@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InputValidator
   def self.valid_duration?(duration)
     # TODO: This looks hacky, find a better way to check if integer

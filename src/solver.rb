@@ -45,7 +45,8 @@ class Solver
           search_trie(valid_words, board, word_fragment + letter, adj_tile, updated_used_tiles)
         end
       else
-        search_trie(valid_words, board, word_fragment + current_letter, adj_tile, updated_used_tiles)
+        search_trie(valid_words, board, word_fragment + current_letter,
+                    adj_tile, updated_used_tiles)
       end
     end
   end

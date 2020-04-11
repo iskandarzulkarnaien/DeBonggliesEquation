@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 module UserInputHandler
   def self.request_input(message)
     Ui.print_formatted message
     print '>>> '
     gets.chomp.strip.upcase
   end
+
   # TODO: Refactor
   # Linting has been disabled as this section is marked for refactor
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
@@ -45,12 +48,14 @@ module UserInputHandler
 
     game_types[choice][:type]
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Lint/RedundantCopDisableDirective
 
   def self.request_user_board
     user_board = nil
     loop do
-      user_board = UserInputHandler.request_input  'Please enter a 16 Letter Board. Valid characters are A-Z and *,'\
-                                  'which can be any character'
+      user_board = UserInputHandler.request_input 'Please enter a 16 Letter Board. Valid '\
+                                                  'characters are A-Z and *, which can be any '\
+                                                  'character'
       break if InputValidator.valid_board?(user_board)
 
       Ui.print_formatted 'Your board contains invalid characters!'

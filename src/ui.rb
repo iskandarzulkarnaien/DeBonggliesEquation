@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Ui
   def self.pause_until_next_user_input(message = 'Press enter to continue...')
     print_formatted message
