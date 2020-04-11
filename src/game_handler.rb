@@ -77,13 +77,13 @@ class GameHandler
 
   def play_word(word, game)
     if game.played_word?(word)
-      print_formatted "Oops! Looks like you have already played #{word}"
+      Ui.print_formatted "Oops! Looks like you have already played #{word}"
     elsif game.valid_word?(word)
       points = game.calculate_points(word)
       game.play_word(word)
-      print_formatted "Congrats! #{word} was worth #{points} point#{'s' if game.points != 1}"
+      Ui.print_formatted "Congrats! #{word} was worth #{points} point#{'s' if game.points != 1}"
     else
-      print_formatted "Sorry! #{word} is not a valid word"
+      Ui.print_formatted "Sorry! #{word} is not a valid word"
     end
   end
 
