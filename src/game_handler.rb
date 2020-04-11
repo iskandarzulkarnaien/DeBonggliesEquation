@@ -12,21 +12,18 @@ require_relative 'user_input_handler.rb'
 class GameHandler
   include Ui
 
+  # Allows access to class-level variable
+  class << self; attr_accessor :current end
   @current = nil
 
   def initialize(dictionary)
     @solver = Solver.new(dictionary)
-    @current = self
+    GameHandler.current = self
   end
 
   # TODO: Shift this to a more appropriate class
   def handle_shutdown
     # TODO: Handle shutdown
-  end
-
-  # TODO: Fix new expecting a dictionary
-  def self.current
-    @@current || new
   end
 
   def replace_dictionary(dictionary_path)

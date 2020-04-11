@@ -12,15 +12,13 @@ class HighscoreTracker
   AVERAGED_SCORE_GAMES = [:average].freeze
   NORMAL_GAMES = (Game::GAME_TYPES - INELIGIBLE_GAMES - AVERAGED_SCORE_GAMES).freeze
 
-  @current_highscore_tracker = nil
+  # Allows access to class-level variable
+  class << self; attr_accessor :current end
+  @current = nil
 
   def initialize(args = nil)
     @highscores = args.nil? ? initialize_defaults : load_highscores
-    @current_highscore_tracker = self
-  end
-
-  def self.current
-    @current_highscore_tracker || new
+    HighscoreTracker.current = self
   end
 
   def reset_highscore

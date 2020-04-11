@@ -2,14 +2,13 @@
 
 class ActionHandler
   PLACEHOLDER_MESSAGE = 'This feature is not yet implemented.'
-  @current_action_handler = nil
+
+  # Allows access to class-level variable
+  class << self; attr_accessor :current end
+  @current = nil
 
   def initialize
-    @current_action_handler = self
-  end
-
-  def self.current
-    @current_action_handler || new
+    ActionHandler.current = self
   end
 
   def action_message(action)
