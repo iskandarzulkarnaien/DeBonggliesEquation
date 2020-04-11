@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative './game/game.rb'
-require_relative './highscore/highscore.rb'
-require_relative './highscore/normal_highscore.rb'
-require_relative './highscore/average_highscore.rb'
+require_relative './games/game.rb'
+require_relative './highscores/highscore.rb'
+require_relative './highscores/normal_highscore.rb'
+require_relative './highscores/average_highscore.rb'
 
 class HighscoreTracker
   # TODO: Find a way to remove hardcoded values

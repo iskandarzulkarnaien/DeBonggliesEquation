@@ -4,8 +4,8 @@ require_relative 'ui.rb'
 require_relative 'input_validator.rb'
 require_relative 'highscore_tracker.rb'
 require_relative 'dictionary_trie.rb'
-require_relative 'game/game.rb'
-require_relative 'game/game_factory.rb'
+require_relative 'games/game.rb'
+require_relative 'games/game_factory.rb'
 
 require 'tk'
 
