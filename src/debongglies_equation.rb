@@ -150,25 +150,17 @@ class DeBoggliesEquation
     pause_until_next_user_input
   end
 
-  # Linting disabled as this section can cause I/O issues
-  # rubocop:disable Style/RedundantBegin, Metrics/MethodLength
   def import_dictionary
-    begin
-      user_dictionary_path = Tk.getOpenFile('title' => 'Select new dictionary',
-                                            'filetypes' => '{{Text} {.txt}}')
-      if user_dictionary_path.empty?
-        print_formatted 'Dictionary import cancelled'
-      else
-        @dictionary = make_dictionary(user_dictionary_path)
-        print_formatted 'New dictionary successfully loaded'
-      end
-      pause_until_next_user_input
-    rescue StandardError => e
-      raise 'Dictionary Import Failed! Please send a screenshot of this error '\
-            "to the developer\n#{e.message}"
+    user_dictionary_path = Tk.getOpenFile('title' => 'Select new dictionary',
+                                          'filetypes' => '{{Text} {.txt}}')
+    if user_dictionary_path.empty?
+      print_formatted 'Dictionary import cancelled'
+    else
+      @dictionary = make_dictionary(user_dictionary_path)
+      print_formatted 'New dictionary successfully loaded'
     end
+    pause_until_next_user_input
   end
-  # rubocop:enable Style/RedundantBegin, Metrics/MethodLength
 
   def reset_dictionary
     @dictionary = make_dictionary(DICTIONARY_PATH)
