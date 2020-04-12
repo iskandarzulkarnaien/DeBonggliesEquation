@@ -3,11 +3,12 @@
 Change Log:
 - Reduced delay between exit command and app closing from 5s to 3s
 - Added dictionary import feature (imported dictionaries do not persist and must be reimported after the session is closed)
-- Separated games into 5 duration categories: Short (2mins), Classic (2mins), Long (5mins), Custom and Sandbox (317 years)
+- Separated games into 5 duration categories: Short (2mins), Classic (2mins), Long (5mins), Custom (player inputted duration) and Sandbox (317 years)
 - Added separate highscores for each game category except custom, including an "average points per second" category
 - Added pauses between most actions, to allow players to see the output better
 - Add confirmation before game start to prevent timer from starting before player is ready to begin
 - Display maximum attainable score on game end
+- End game early if player has played all valid words
 
 # alpha-v1.0.1
 Hotfix to correct typo in startup message.
